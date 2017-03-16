@@ -24,6 +24,7 @@ val id : pi (a : type). set a -> set (tup a a).
 val domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
 val range_restriction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
 val domain_substraction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
+val range_substraction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
 
 val fst : pi a b. tup a b -> a.
 val snd : pi a b. tup a b -> b.
@@ -132,3 +133,13 @@ rewrite
 rewrite
   forall (a b : type) (P : set (tup a b)) (T : set b) (X : a) (Y : b).
     mem (tup a b) (tup21 b a X Y) (range_restriction a b P T) <=> mem (tup a b) (tup21 b a X Y) P && mem b Y T.
+
+#domain_substraction
+rewrite
+  forall (a b : type) (P : set (tup a b)) (S : set a) (X : a) (Y : b).
+    mem (tup a b) (tup21 b a X Y) (domain_substraction a b S P) <=> mem (tup a b) (tup21 b a X Y) P && ~ (mem a X S).
+
+#range_substraction
+rewrite
+  forall (a b : type) (P : set (tup a b)) (T: set b) (X : a) (Y: b).
+    mem (tup a b) (tup21 b a X Y) (range_substraction a b P T) <=> mem (tup a b) (tup21 b a X Y) P && ~ (mem b Y T).
