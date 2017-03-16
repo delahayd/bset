@@ -1,0 +1,5 @@
+# union_excluded_middle.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S A1 : set a). subset a A1 S => union a A1 (diff a S A1) = S.

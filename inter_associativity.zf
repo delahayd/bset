@@ -1,0 +1,5 @@
+# inter_associativity.zf
+
+include "bset.zf".
+
+goal forall a S T U. inter a (inter a S T) U = inter _ S (inter _ T U).

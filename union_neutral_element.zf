@@ -1,0 +1,5 @@
+# union_neutral_element.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 : set a). union a A1 (empty a) = A1.

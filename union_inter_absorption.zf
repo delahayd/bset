@@ -1,0 +1,5 @@
+# union_inter_absorption.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 B : set a). union a A1 (inter a A1 B) = A1.

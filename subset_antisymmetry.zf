@@ -1,0 +1,5 @@
+# subset_antisymmetry.zf
+
+include "bset.zf".
+
+goal forall a S T. subset a S T && subset a T S => S = T.

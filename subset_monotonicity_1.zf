@@ -1,0 +1,7 @@
+# subset_monotonicity_1.zf
+
+include "bset.zf".
+
+goal
+  forall a S T U V.
+    subset a U S && subset a V T => subset _ (times _ _ U V) (times _ _ S T).

@@ -1,0 +1,5 @@
+# double_complementation.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 S: set a). subset a A1 S => A1 = diff a S (diff a S A1).

@@ -1,0 +1,5 @@
+# equal_domain_6.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (U : set a) (T : set b) (R : set (tup a b)). subset a U S && mem (set (tup a b)) R (relation a b S T) => dom a b (domain_restriction a b U R) = inter a U (dom a b R).

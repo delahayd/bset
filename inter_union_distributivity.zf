@@ -1,0 +1,6 @@
+# inter_union_distributivity.zf
+
+include "bset.zf".
+
+goal forall a S T U.
+  inter a S (union a T U) = union _ (inter _ S T) (inter _ S U).

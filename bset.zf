@@ -1,0 +1,129 @@
+# bset.zf
+
+val tup : type -> type -> type.
+val set : type -> type.
+val mem : pi (a : type). a -> set a -> prop.
+val pair : pi (a b : type).a -> b -> (tup a b).
+val power : pi (a : type). set a -> set (set a).
+val subset : pi (a : type). set a -> set a -> prop.
+val times : pi (a b : type). set a -> set b -> set (tup a b).
+val union : pi (a : type). set a -> set a -> set a.
+val inter : pi (a : type). set a -> set a -> set a.
+val diff : pi (a : type). set a -> set a -> set a.
+val empty: pi (a : type). set a.
+val plmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val mnmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val relation: pi (a b : type). set a -> set b -> set (set (tup a b)).
+val dom : pi (a b : type). set (tup a b) -> set a.
+val ran: pi (a b: type). set(tup a b) -> set b.
+val inverse : pi (a b : type). set (tup a b) -> set (tup b a).
+val tup21 : pi (a b : type). b -> a -> tup b a.
+val semicolon : pi (a b c : type). set (tup a b) -> set (tup b c) -> set (tup a c).
+val image : pi (a b : type). set (tup a b) -> set a -> set b.
+val id : pi (a : type). set a -> set (tup a a).
+val domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
+val range_restriction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
+val domain_substraction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
+
+
+rewrite
+  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
+    mem (tup a b) z (times a b S T) <=>
+      (exists (x : a) (y : b). z = (pair a b x y) && mem a x S && mem b y T).
+
+rewrite
+  forall (a : type) (b : type) (x : a) (y : b) (S : set a) (T : set b).
+    mem (tup a b) (pair a b x y) (times a b S T) <=> mem a x S && mem b y T.
+
+#rewrite
+#  forall a b z S.
+#    mem (tup a b) z S <=> (exists x y. z = (pair a b x y) &&
+#      mem (tup a b) (pair a b x y) S).
+
+rewrite
+  forall (a : type) (S T : set a).
+    mem (set a) S (power a T) <=> (forall (x : a). (mem a x S) => (mem a x T)).
+
+rewrite
+  forall (a : type) (S T : set a). subset a S T <=> mem (set a) S (power a T).
+
+rewrite
+  forall (a : type) (S T : set a).
+    S = T <=> (forall (x : a). (mem a x S) <=> (mem a x T)).
+
+rewrite
+  forall (a : type) (x : a) (S T : set a).
+    mem a x (union a S T) <=> mem a x S || mem a x T.
+
+rewrite
+  forall (a : type) (x : a) (S T : set a).
+    mem a x (inter a S T) <=> mem a x S && mem a x T.
+#diff
+rewrite
+  forall (a : type) (x : a) (S T : set a).
+    mem a x (diff a S T) <=> mem a x S && ~ (mem a x T).
+
+rewrite
+  forall (a b : type) (x x1 : a) (y y1 : b).
+    pair a b x y = pair a b x1 y1 <=> x = x1 && y = y1.
+
+#empty
+rewrite
+  forall (a : type) (x : a).
+    mem a x (empty a) <=> false.
+
+#+-> PLusMiNusGreaTer plmngt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (F : set (tup a b)).
+    mem (set (tup a b)) F (plmngt a b S T) <=> mem (set (tup a b)) F (relation a b S T) && (forall (X : a) (Y1 Y2 : b). mem (tup a b) (pair X Y1) F && (mem (tup a b) (pair X Y2) F) => (Y1 = Y2)).
+    
+#--> MiNusMiNusGreaTer mnmngt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
+    mem (set(tup a b)) X (mnmngt a b S T) <=> mem (set(tup a b)) X (plmngt a b S T) && (dom a b X) = S.
+
+
+#ran
+rewrite
+  forall (a b : type) (P : set (tup a b)) (X : b).
+    mem b X (ran a b P) <=> (exists (A1 : a). mem (tup a b) (tup21 b a A1 X) P).
+
+#dom
+rewrite
+  forall (a b : type) (P : set (tup a b)) (X: a).
+    mem a X (dom a b P) <=> (exists (B1 : b). mem (tup a b) (tup21 b a X B1) P).
+
+#inverse
+rewrite
+  forall (a b : type) (P : set (tup a b)) (X : b) (Y : a).
+    mem (tup b a) (tup21 a b X Y) (inverse a b P) <=> mem (tup a b) (tup21 b a Y X) P.
+
+#relation
+rewrite
+   forall (a b : type) (U : set a) (V : set b) (R: set (tup a b)).
+     mem (set (tup a b)) R (relation a b U V) <=> (forall (X : a) (Y : b). mem (tup a b) (tup21 b a X Y) R => mem a X U && mem b Y V).
+
+#semicolon
+rewrite
+  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (X : a) (Y : c).
+    mem (tup a c) (tup21 c a X Y) (semicolon a b c P Q) <=> (exists (B1 : b). mem (tup a b) (tup21 b a X B1) P && mem (tup b c) (tup21 c b B1 Y) Q).
+
+#image
+rewrite
+  forall (a b : type) (P : set (tup a b)) (W : set a) (X : b).
+    mem b X (image a b P W) <=> (exists (A1 : a). mem a A1 W && mem (tup a b) (tup21 b a A1 X) P).
+
+#id
+rewrite
+  forall (a : type) (U : set a) (X : a) (Y : a).
+    mem (tup a a) (tup21 a a X Y) (id a U) <=> mem a X U && X = Y.
+
+#domain_restriction
+rewrite
+  forall (a b : type) (P: set (tup a b)) (S : set a) (X : a) (Y : b).
+    mem (tup a b) (tup21 b a X Y) (domain_restriction a b S P) <=> mem (tup a b) (tup21 b a X Y) P && mem a X S.
+
+#range_restriction
+rewrite
+  forall (a b : type) (P : set (tup a b)) (T : set b) (X : a) (Y : b).
+    mem (tup a b) (tup21 b a X Y) (range_restriction a b P T) <=> mem (tup a b) (tup21 b a X Y) P && mem b Y T.

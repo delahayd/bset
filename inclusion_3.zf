@@ -1,0 +1,5 @@
+# inclusion_3.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S A1 B C : set a). subset a A1 S && subset a B S && subset a C S => subset a (inter a A1 B) C <=> subset a A1 (union a (diff a S B) C).

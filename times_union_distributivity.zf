@@ -1,0 +1,5 @@
+# times_union_distributivity.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 B T : set a). times a a T (union a A1 B) = union (tup a a) (times a a T A1) (times a a T B).

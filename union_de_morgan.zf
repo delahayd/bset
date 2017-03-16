@@ -1,0 +1,5 @@
+# union_de_morgan.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S A1 B : set a). subset a A1 S && subset a B S => diff a S (union a A1 B) = inter a (diff a S A1) (diff a S B).

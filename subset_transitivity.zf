@@ -1,0 +1,5 @@
+# subset_transitivity.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S T U : set a).subset a S T && subset a T U => subset a S U.

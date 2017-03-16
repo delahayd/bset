@@ -1,0 +1,5 @@
+# union_associativity.zf
+
+include "bset.zf".
+
+goal forall a S T U. union a (union a S T) U = union _ S (union _ T U).

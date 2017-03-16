@@ -1,0 +1,5 @@
+# equal_domain_5.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S : set a). dom a a (id a S) = S.

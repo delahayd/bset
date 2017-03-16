@@ -1,0 +1,5 @@
+# subset_monotonicity_2.zf
+
+include "bset.zf".
+
+goal forall a S T. subset a S T => subset _ (power _ S) (power _ T).

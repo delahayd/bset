@@ -1,0 +1,753 @@
+
+(* -----------------------------------------------------------------------------
+                      Theory B for Zenon Modulo 
+   -----------------------------------------------------------------------------
+ *)
+
+
+theory Bmod_SETGEN
+
+  (* B-book / chapitre 2.1 Basic Sets Constructs / page 61 *)
+
+  type set 'a
+
+  predicate mem 'a (set 'a)
+
+  predicate (==) (s t: set 'a) =
+    forall x: 'a. mem x s <-> mem x t
+
+  function power (set 'a): set (set 'a)
+  
+  function non_empty_power (set 'a): set (set 'a)
+
+  predicate subset (s t: set 'a) = 
+    mem s (power t)
+
+  predicate subsetnoteq (s t: set 'a) = 
+    subset s t /\ not (s == t)
+
+  constant empty: set 'a
+
+  predicate is_empty (s: set 'a) = 
+    forall x: 'a. 
+    not (mem x s)
+    
+  axiom empty_def1: 
+    is_empty (empty: set 'a)
+  
+  axiom empty:
+    forall x: 'a.
+    not (mem x empty)
+
+  function add  'a (set 'a): set 'a
+
+  axiom add_def1: 
+    forall x y: 'a. forall s: set 'a.
+    mem x (add y s) 
+    <-> x = y 
+        \/ mem x s
+
+  function singleton ('a): set ('a) 
+
+  axiom mem_singleton: 
+    forall x y: 'a.
+    mem x (singleton y) 
+    <-> (x = y)
+
+  function remove 'a (set 'a): set 'a
+
+  axiom remove_def1:
+    forall x y: 'a, s: set 'a.
+    mem x (remove y s) 
+    <-> x <> y 
+        /\ mem x s
+
+  constant all: set 'a
+  
+  axiom all_def: 
+    forall x: 'a. 
+    mem x all
+
+  (* union *)
+  function union (set 'a) (set 'a): set 'a
+
+  axiom mem_union:
+    forall s t: set 'a, x: 'a.
+    mem x (union s t) 
+    <-> (mem x s 
+    	 \/ mem x t)
+
+  (* inter *)
+  function inter (set 'a) (set 'a): set 'a
+
+  axiom mem_inter:
+    forall s t: set 'a, x: 'a.
+    mem x (inter s t) 
+    <-> (mem x s 
+    	 /\ mem x t)
+
+  (* diff *)
+  function diff (set 'a) (set 'a): set 'a
+
+  axiom mem_diff:
+    forall s t: set 'a, x: 'a.
+    mem x (diff s t) 
+    <-> (mem x s 
+    	 /\ not (mem x t))
+
+end
+
+(***********************************************************************)
+
+theory Bmod_BOOL
+
+  use export bool.Bool
+  use export Bmod_SETGEN
+  
+  function b_bool : set bool
+  axiom mem_b_bool: 
+    forall x: bool.
+    mem x b_bool
+
+end
+
+(***********************************************************************)
+
+theory Interval
+
+  use export int.Int
+  use export Bmod_SETGEN
+
+  function integer : set int
+
+  axiom mem_integer: 
+    forall x: int. 
+    mem x integer
+
+  function natural : set int
+
+  axiom mem_natural:
+    forall x: int. 
+    mem x natural 
+    <-> x >= 0
+
+  function natural1 : set int
+
+  axiom mem_natural1:
+    forall x: int. 
+    mem x natural1 
+    <-> x > 0
+
+  function nat : set int
+
+  axiom mem_nat:
+    forall x: int. 
+    mem x nat 
+    <-> (x >= 0 /\ x <= 2147483647)
+
+  function nat1 : set int
+
+  axiom mem_nat1:
+    forall x: int. 
+    mem x nat1 
+    <-> (x > 0 /\ x <= 2147483647)
+
+  function bounded_int : set int
+
+  axiom mem_bounded_int:
+    forall x: int. 
+    mem x bounded_int 
+    <-> (x >= (-2147483647) /\ x <= 2147483647)
+
+  function mk int int : set int
+
+  axiom mem_interval:
+    forall x a b: int.
+      mem x (mk a b) 
+      <-> (a <= x /\ x <= b)
+
+end
+
+(*theory Interval
+
+  clone export Bmod_INTERVAL
+
+end*)
+
+(***********************************************************************)
+
+
+theory Bmod_SET
+
+  use export Bmod_SETGEN
+
+  (* AXIOMS *)
+
+(* times function *)
+  function times (set 'a) (set 'b): set ('a , 'b)
+
+  axiom mem_times: 
+    forall s: set 'a, t: set 'b, x: 'a, y: 'b.
+    mem (x, y) (times s t) 
+    <-> (mem x s 
+    	 /\ mem y t)
+
+(*
+axiom mem_times: 
+    forall s: set 'a, t: set 'b, z: ('a, 'b).
+    mem z (times s t) 
+    <-> exists x: 'a, y: 'b. 
+    	(z = (x, y) 
+	 /\ mem x s
+	 /\ mem y t)
+*)
+  (* SET 2 : membership of power set *)
+
+(* power function *)
+
+  axiom mem_power: 
+    forall s t: set 'a.
+    mem s (power t) 
+    <-> (forall x: 'a. 
+    	 mem x s -> mem x t)
+
+  axiom mem_non_empty_power: 
+    forall s t: set 'a.
+    mem s (non_empty_power t) 
+    <-> (forall x: 'a. 
+    	 mem x s -> mem x t)
+	/\ not (s == empty)
+
+  (* SET 3 : comprehension *)
+  
+  (* SET 4 : extensionality *)
+(*  axiom extensionality: 
+    forall s t: set 'a.
+    s = t 
+    <-> (forall x: 'a. 
+    	 mem x s <-> mem x t) *)
+
+  function choose (s: set 'a) : 'a
+
+  (* SET 5 : choice member *)
+(*  axiom choice_exists: 
+    forall s: set 'a.
+    mem (choose s) s 
+    <-> (exists x: 'a. 
+    	 mem x s) *)
+
+(*  axiom choose_def: 
+    forall s: set 'a. 
+    not (is_empty s) -> mem (choose s) s
+*)
+(* ---------- ---------- ---------- *)
+
+(* ---------- ---------- ---------- *)
+
+  (* B-book / chapitre 2.3 Derived Constructs / page 72 *)
+
+
+  (* expression *)
+
+  (* list + expression *)
+
+  (* power_1 without empty *)
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+  (* 2.4 Binary Relations *)
+
+
+  (* mem_relation *)
+  function relation (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_relation:
+    forall u: set 'a, v: set 'b, r: set ('a, 'b).
+    mem r (relation u v) 
+    <-> (forall x: 'a, y: 'b.
+    	 mem (x, y) r 
+	 -> (mem x u 
+	     /\ mem y v)) 
+
+  (* mem_inverse *)
+  function inverse (set ('a, 'b)): set ('b, 'a)
+
+  axiom mem_inverse:
+    forall p: set ('a, 'b), x: 'b, y: 'a.
+    mem (x, y) (inverse p)
+    <-> mem (y, x) p 
+
+  (* mem_dom *)
+  function dom (set ('a, 'b)): set 'a
+
+  axiom mem_dom:
+    forall p: set ('a, 'b), x: 'a.
+    mem x (dom p)
+    <-> (exists b: 'b. 
+    	 mem (x, b) p)
+
+  (* mem_ran *)
+  function ran (set ('a, 'b)): set 'b
+
+  axiom mem_ran:
+    forall p: set ('a, 'b), x: 'b.
+    mem x (ran p)
+    <-> (exists a: 'a. 
+    	 mem (a, x) p)
+
+  (* mem_semicolon *)
+  function semicolon (set ('a, 'b)) (set ('b, 'c)): set ('a, 'c)
+
+  axiom mem_semicolon:
+    forall p: set ('a, 'b), q: set ('b, 'c), x: 'a, y: 'c.
+    mem (x, y) (semicolon p q)
+    <-> (exists b: 'b. 
+    	 mem (x, b) p 
+	 /\ mem (b, y) q)
+
+  (* semicolon_back *)
+  function semicolon_back (set ('b, 'c)) (set ('a, 'b)): set ('a, 'c)
+
+  axiom semicolon_back:
+    forall p: set ('a, 'b), q: set ('b, 'c).
+    semicolon_back q p 
+    = semicolon p q
+
+  (* mem_id *)
+  function id (set 'a): set ('a, 'a)
+
+  axiom mem_id:
+    forall u: set 'a, x: 'a, y: 'a.
+    mem (x, y) (id u) 
+    <-> (mem x u
+	 /\ x = y)
+
+  (* mem_domain_restriction *)
+  function domain_restriction (set 'a) (set ('a, 'b)): set ('a, 'b)
+
+  axiom mem_domain_restriction: 
+    forall p: set ('a, 'b), s: set 'a, x: 'a, y: 'b.
+    mem (x, y) (domain_restriction s p) 
+    <-> (mem (x, y) p 
+    	 /\ mem x s)
+
+  (* mem_range_restriction *)
+  function range_restriction (set ('a, 'b)) (set 'b): set ('a, 'b)
+
+  axiom mem_range_restriction:
+    forall p: set ('a, 'b), t: set 'b, x: 'a, y: 'b.
+    mem (x, y) (range_restriction p t)
+    <-> (mem (x, y) p 
+    	 /\ mem y t)
+
+  (* mem_domain_substraction *)
+  function domain_substraction (set 'a) (set ('a, 'b)): set ('a, 'b)
+
+  axiom mem_domain_substraction:
+    forall p: set ('a, 'b), s: set 'a, x: 'a, y: 'b.
+    mem (x, y) (domain_substraction s p) 
+    <-> (mem (x, y) p
+    	 /\ not (mem x s))
+
+  (* mem_range_substraction *)
+  function range_substraction (set ('a, 'b)) (set 'b): set ('a, 'b)
+
+  axiom mem_range_substraction: 
+    forall p: set ('a, 'b), t: set 'b, x: 'a, y: 'b.
+    mem (x, y) (range_substraction p t)
+    <-> (mem (x, y) p 
+    	 /\ not (mem y t))
+
+
+(* ---------- ---------- ---------- *)
+
+  (* mem_image *)
+  function image (set ('a, 'b)) (set 'a): set ('b)
+
+  axiom mem_image:
+    forall p: set ('a, 'b), w: set 'a, x: 'b.
+    mem x (image p w) 
+    <-> (exists a: 'a. 
+    	 mem a w 
+    	 /\ mem (a, x) p)
+
+  (* mem_overriding *)
+  function (<+) (set ('a, 'b)) (set ('a, 'b)): set ('a, 'b)
+
+  axiom mem_overriding:
+    forall q p: set ('a, 'b), x: 'a, y: 'b.
+    mem (x, y) (q <+ p) 
+    <-> ((mem (x, y) q 
+    	  /\ not (mem x (dom p)))
+    	\/ mem (x, y) p)
+
+  (* mem_direct_product *)
+  function direct_product (set ('a, 'b)) (set ('a, 'c)): set ('a, ('b, 'c))
+
+  axiom mem_direct_product:
+    forall f: set ('a, 'b), g: set ('a, 'c), x: 'a, y: 'b, z: 'c.
+    mem (x, (y, z)) (direct_product f g) 
+    <-> (mem (x, y) f
+	 /\ mem (x, z) g)
+
+  (* mem_proj_op_1 *)
+  function prj1 ((set 'a) , (set 'b)): set (('a, 'b), 'a)
+
+  axiom mem_proj_op_1: 
+    forall s: set 'a, t: set 'b, x: 'a, y: 'b, z: 'a.
+    mem ((x, y), z) (prj1 (s, t)) 
+    <-> (mem ((x, y), z) (times (times s t) s)
+    	 /\ z = x)
+
+  (* mem_proj_op_2 *)
+  function prj2 ((set 'a) , (set 'b)): set (('a, 'b), 'b)
+
+  axiom mem_proj_op_2: 
+    forall s: set 'a, t: set 'b, x: 'a, y: 'b, z: 'b.
+    mem ((x, y), z) (prj2 (s, t)) 
+    <-> (mem ((x, y), z) (times (times s t) t) 
+    	 /\ z = y)
+
+  (* mem_parallel_product *)
+  function parallel_product (set ('a, 'b)) (set ('c, 'd)): set (('a, 'c), ('b, 'd))
+
+  axiom mem_parallel_product:
+    forall h: set ('a, 'b), k: set ('c, 'd), x: 'a, y: 'c, z: 'b, w: 'd.
+    mem ((x, y), (z, w)) (parallel_product h k) 
+    <-> (mem (x, z) h
+	 /\ mem (y, w) k)
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+  (* 2.5 Functions *)
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+  (* mem_partial_function_set *)
+  function (+->) (set 'a) (set 'b): set (set ('a, 'b)) 
+
+(*  axiom mem_partial_function_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s +-> t) 
+    <-> (mem x (relation s t)
+	 /\ subset (semicolon (inverse x) x) (id t))*)
+
+  axiom mem_partial_function_set:
+    forall s: set 'a, t: set 'b, f: set ('a, 'b).
+    mem f (s +-> t)
+    <-> (mem f (relation s t)
+    	 /\ (forall x: 'a, y1 y2: 'b. 
+	     mem (x, y1) f /\ mem (x, y2) f 
+	     -> y1=y2))
+
+  (* mem_total_function_set *)
+  function (-->) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_total_function_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s --> t)
+    <-> (mem x (s +-> t)
+	 /\ (dom x) == s)
+
+  (* mem_partial_injection_set *)
+  function (>+>) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_partial_injection_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s >+> t)
+    <-> (mem x (s +-> t)
+	 /\ mem (inverse x) (t +-> s))
+
+  (* mem_total_injection_set *)
+  function (>->) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_total_injection_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s >-> t)
+    <-> (mem x (s >+> t)
+    	 /\ mem x (s --> t))
+
+
+  (* mem_partial_surjection_set *)
+  function (+->>) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_partial_surjection_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s +->> t) 
+    <-> (mem x (s +-> t)
+	 /\ (ran x) == t)
+
+  (* total_surjection_set *)
+  function (-->>) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_total_surjection_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s -->> t)
+    <-> (mem x (s +->> t)
+    	 /\ mem x (s --> t))
+
+  (* mem_partial_bijection_set *)
+  function (>+>>) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_partial_bijection_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s >+>> t)
+    <-> (mem x (s >+> t)
+    	 /\ mem x (s +->> t))
+
+  (* mem_total_bijection_set *)
+  function (>->>) (set 'a) (set 'b): set (set ('a, 'b))
+
+  axiom mem_total_bijection_set:
+    forall s: set 'a, t: set 'b, x: set ('a, 'b).
+    mem x (s >->> t)
+    <-> (mem x (s >-> t)
+    	 /\ mem x (s -->> t))
+
+
+(* ---------- ---------- ---------- *)
+
+function apply (set ('a, 'b)) ('a): ('b)
+
+  axiom apply_def0: 
+    forall f: set ('a, 'b), s: set 'a, t: set 'b, a: 'a.
+    mem f (s +-> t) /\ mem a (dom f) -> mem (a, apply f a) f
+
+end
+
+(* ----------------------------------------------------- *)
+
+theory Bmod_SEQ
+
+  use export Interval
+  use export Bmod_SET
+
+  (* a sequence of length n is any total function on domain 1..n *)
+  function seq_length (int) (set 'a) : set (set (int, 'a))
+
+  axiom seq_length_def: 
+    forall n: int, s: set 'a.
+    seq_length n s = ((mk 1 n) --> s)
+
+  function size (set (int, 'a)) : int
+
+  axiom size_def: 
+    forall n:int, s:set 'a, r: set (int, 'a).
+     n >= 0 /\ mem r (seq_length n s) -> size r = n
+
+  function seq (set 'a) : set (set (int, 'a))
+
+  axiom seq_def : forall s:set 'a, r:set (int, 'a).
+     mem r (seq s) 
+     <-> size r >= 0 
+     	 /\ mem r (seq_length (size r) s)
+
+  function seq1 (set 'a) : set (set (int, 'a))
+
+  (* FIXME add seq1 axioms *)
+
+  function iseq (set 'a) : set (set (int, 'a))
+
+  (* FIXME add iseq axioms *)
+
+  function iseq1 (set 'a) : set (set (int, 'a))
+
+  (* FIXME add iseq1 axioms *)
+
+  function perm (set 'a) : set (set (int, 'a))
+
+  (* FIXME add perm axioms *)
+
+end
+
+(* ----------------------------------------------------- *)
+
+theory Bmod_LIST
+
+  use export Bmod_SET
+
+  (* FIXME add insert_in_front, insert_at_tail, tail, last, first,
+     front, concatenation, conc axioms *)
+
+  function insert_in_front 'a (set (int, 'a)) : set (int, 'a)
+
+  function insert_at_tail (set (int, 'a)) 'a : set (int, 'a)
+
+  function tail (set (int, 'a)) : set (int, 'a)
+
+  function last (set (int, 'a)) : 'a
+
+  function first (set (int, 'a)) : 'a
+
+  function front (set (int, 'a)) : set (int, 'a)
+
+  function concatenation (set (int, 'a)) (set (int, 'a)) : set (int, 'a)
+
+  function conc (set (int, (set (int, 'a)))) : set (int, 'a)
+
+end
+
+(* ----------------------------------------------------- *)
+
+theory Bmod_ISFIN
+
+   use export int.Int
+   use export Bmod_SET
+
+(*  predicate is_finite_subset (set 'a) (set 'a) (int)*)
+
+   (* (is_finite_subset s1 s2 c) is true when s1 is a finite subset of
+      s2 of card c *)
+   inductive is_finite_subset (s1:set 'a) (s2:set 'a) (c:int) =
+     | Empty: forall s:set 'a. is_finite_subset empty s 0
+     | Add_mem: forall x:'a, s1 s2:set 'a, c:int. 
+         is_finite_subset s1 s2 c -> mem x s2 -> mem x s1 ->
+         is_finite_subset (add x s1) s2 c
+     | Add_notmem: forall x:'a, s1 s2:set 'a, c:int. 
+         is_finite_subset s1 s2 c -> mem x s2 -> not mem x s1 ->
+         is_finite_subset (add x s1) s2 (c+1)
+
+  use Interval
+
+  (* B operator "FIN" *)
+  function finite_subsets (set 'a) : set (set 'a)
+
+  axiom finite_subsets_def :
+    forall s x: set 'a.
+    mem x (finite_subsets s) 
+    <-> exists c:int. is_finite_subset x s c
+
+  (* B operator "FIN1" *)
+  function non_empty_finite_subsets (set 'a) : set (set 'a)
+
+  axiom non_empty_finite_subsets_def :
+    forall s x: set 'a.
+    mem x (non_empty_finite_subsets s) 
+    <-> exists c:int. is_finite_subset x s c /\ not (x == empty)
+
+  (* operator "card" *)
+
+  function card (set 'a) : int
+
+  axiom card_def :
+    forall s x: set 'a, c:int. 
+    is_finite_subset x s c -> card x = c
+
+end
+
+(* ----------------------------------------------------- *)
+
+theory Bmod_MINMAX
+
+  use export Bmod_SET
+  use export int.Int
+  use export Interval
+  use export Bmod_ISFIN
+
+
+  function min (set int) : int
+
+  axiom min_belongs:
+      forall s : (set int).
+      (subset s natural) 
+      /\ (not (s == (empty : (set int)))) 
+      -> (mem (min s) s)
+
+  axiom min_is_min:
+      forall s : (set int), x : int.
+      (subset s natural) 
+      /\ (mem x s) 
+      -> ((min s) <= x)
+
+  function max (set int) : int
+
+  axiom max_belongs:
+      forall s : (set int).
+      (mem s (non_empty_finite_subsets natural))
+      -> (mem (max s) s)
+
+  axiom max_is_max:
+      forall s : (set int), x : int.
+      (mem s (finite_subsets natural)) 
+      /\ (mem x s) 
+      -> (x <= (max s))
+
+(*  function min (set int) : int
+
+  axiom min_belongs:
+      forall s : (set int).
+      (not (s == (empty : (set int)))) -> (mem (min s) s)
+
+  axiom min_is_min:
+      forall s : (set int), x : int.
+      (mem x s) -> ((min s) <= x)
+
+  function max (set int) : int
+
+  axiom max_belongs: 
+    forall s : (set int).
+    (mem s (non_empty_finite_subsets natural)) -> (mem (max s) s)
+
+  axiom mam_is_max: 
+    forall s : (set int), x : int.
+    (mem s (non_empty_finite_subsets natural)) 
+    /\ (mem x s) 
+    -> x <= (max s)
+
+  axiom max_belongs:
+      forall s : (set int).
+      (not (s == (empty : (set int)))) -> (mem (max s) s)
+
+  axiom max_is_max:
+      forall s : (set int), x : int.
+      (mem x s) -> (x <= (max s))
+*)
+end
+
+(* ----------------------------------------------------- *)
+
+theory Bmod_ITERATE
+
+  use export Bmod_SET
+  use export int.Int
+
+  function iterate ((set ('a, 'a)) , (int)) : (set ('a, 'a))
+
+  axiom iterate_def:
+    forall a : set ('a, 'a), b :int.
+    (iterate (a , b)) = if (b = 0) then (id (dom a)) else (semicolon (iterate (a , (b - 1))) a)
+
+  function closure (set ('a, 'a)) : (set ('a, 'a))
+
+  axiom closure_def:
+    forall a : set ('a, 'a), u : ('a , 'a).
+    (mem u (closure a)) 
+    <-> exists x : int. (x >= 0) /\ (mem u (iterate (a , x)))
+
+  function closure1 (set ('a, 'a)) : (set ('a, 'a))
+
+  axiom closure1_def:
+    forall a : set ('a, 'a), u : ('a , 'a).
+    (mem u (closure a)) 
+    <-> exists x : int. (x > 0) /\ (mem u (iterate (a , x)))
+
+end
+
+(* ----------------------------------------------------- *)
+
+theory Bmod_GENERALIZED
+
+  use export Bmod_SET
+
+  function generalized_union (set (set 'a)) : (set 'a)
+
+  axiom generalized_union_def:
+     forall a : (set (set 'a)), x: 'a.
+     (mem x (generalized_union a)) 
+     <-> exists b : (set 'a). (mem b a) /\ (mem x b)
+
+end
+

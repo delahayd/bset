@@ -1,0 +1,5 @@
+# inter_diff_distributivity.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 B C : set a). diff a (inter a A1 B) C = inter a (diff a A1 C) B.

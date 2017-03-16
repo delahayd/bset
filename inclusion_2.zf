@@ -1,0 +1,5 @@
+# inclusion_2.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 B : set a). subset a (inter a A1 B) A1.

@@ -1,0 +1,5 @@
+# subset_inclusion.zf
+
+include "bset.zf".
+
+goal forall a e S T. mem a e S && subset a S T => mem _ e T.

@@ -1,0 +1,5 @@
+# diff_absorption_21.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 : set a). diff a A1 (empty a)  = A1.

@@ -1,0 +1,5 @@
+# inter_commutativity.zf
+
+include "bset.zf".
+
+goal forall a S T. inter a S T = inter _ T S.

@@ -1,0 +1,5 @@
+# union_commutativity.zf
+
+include "bset.zf".
+
+goal forall a S T. union a S T = union _ T S.

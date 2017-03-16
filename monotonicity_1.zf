@@ -1,0 +1,5 @@
+# monotonicity_1.zf
+
+include "bset.zf".
+
+goal forall (a : type) (A1 B C : set a). subset a B C => subset a (inter a A1 B) (inter a A1 C).

@@ -1,0 +1,5 @@
+# monotonicity_5.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S B C : set a). subset a B S && subset a C S => subset a B C => subset a (diff a S C) (diff a S B).

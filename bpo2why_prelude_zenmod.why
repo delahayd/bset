@@ -1,0 +1,815 @@
+(*
+ bpo2why_prelude.why: formalisation of B operators in Why3
+
+ copyright 2011-2014 Claude Marché <Claude.Marche@inria.fr> -- INRIA/LRI/CNRS
+ copyright 2011-2014 Jean-Christophe Filliâtre
+                         <Jean-Christophe.Filliatre@lri.fr> -- INRIA/LRI/CNRS
+ copyright 2011-2014 David Mentré <d.mentre@fr.merce.mee.com>
+                                     -- Mitsubishi Electric R&D Centre Europe
+
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this file.  If not, see <http://www.gnu.org/licenses/>.
+*)
+
+
+
+(** {1 A Library for B Set Theory}
+
+This library provides a few Why3 theories that formalize the set
+theory as it is defined in the B-book.
+
+Reference: {h <a href="http://hal.inria.fr/hal-00681781/en/">Discharging
+Proof Obligations from Atelier B using Multiple Automated Provers</a>}
+
+*)
+
+(** {2 more lemmas on Why3's sets} *)
+
+theory MoreSets
+
+  use export set.Set
+
+  meta "rewrite_def" predicate (==)
+  meta "rewrite_def" predicate subset
+  meta "rewrite" prop subset_refl
+  meta "rewrite_def" predicate is_empty
+  meta "rewrite" prop empty_def1
+  meta "rewrite" prop mem_empty
+  meta "rewrite" prop add_def1
+  meta "rewrite_def" function singleton
+  meta "rewrite" prop remove_def1
+  meta "rewrite" prop remove_add
+  meta "rewrite" prop subset_remove
+  meta "rewrite" prop union_def1
+  meta "rewrite" prop inter_def1
+  meta "rewrite" prop diff_def1
+  meta "rewrite" prop subset_diff
+  meta "rewrite" prop all_def
+
+meta "compute_max_steps" 1_000_000
+
+end
+
+(** {2 B_BOOL}
+
+B Method's BOOL set
+
+*)
+
+theory B_BOOL
+
+  use export bool.Bool
+  use export MoreSets
+
+  function b_bool : set bool
+
+  axiom mem_b_bool: forall x:bool. mem x b_bool
+
+  meta "rewrite" prop mem_b_bool
+
+end
+
+(** {2 Interval}
+
+interval of integers, seen as sets
+
+*)
+
+theory Interval
+
+  use export int.Int
+  use export set.Set
+
+  function integer : set int
+
+  axiom mem_integer: forall x:int.mem x integer
+
+  function natural : set int
+
+  axiom mem_natural:
+    forall x:int. mem x natural <-> x >= 0
+
+  function natural1 : set int
+
+  axiom mem_natural1:
+    forall x:int. mem x natural1 <-> x > 0
+
+  function nat : set int
+
+  axiom mem_nat:
+    forall x:int. mem x nat <-> (x >= 0 /\ x <= 2147483647)
+
+  function nat1 : set int
+
+  axiom mem_nat1:
+    forall x:int. mem x nat1 <-> (x > 0 /\ x <= 2147483647)
+
+  function bounded_int : set int
+
+  axiom mem_bounded_int:
+    forall x:int. mem x bounded_int <-> (x >= (-2147483647) /\ x <= 2147483647)
+
+  function mk int int : set int
+
+  axiom mem_interval:
+    forall x a b : int [mem x (mk a b)].
+      mem x (mk a b) <-> a <= x <= b
+
+  meta "rewrite" prop mem_integer
+  meta "rewrite" prop mem_natural
+  meta "rewrite" prop mem_natural1
+  meta "rewrite" prop mem_nat
+  meta "rewrite" prop mem_nat1
+  meta "rewrite" prop mem_bounded_int
+  meta "rewrite" prop mem_interval
+
+  end
+
+(** {2 Power set}
+
+    the power set of some set S, i.e the set of subsets of S
+
+*)
+
+theory PowerSet
+
+  use export set.Set
+
+  function power (set 'a) : set (set 'a)
+
+  axiom mem_power : forall x y:set 'a [mem x (power y)].
+      mem x (power y) <-> subset x y
+
+  function non_empty_power (set 'a) : set (set 'a)
+
+  axiom mem_non_empty_power : forall x y:set 'a [mem x (non_empty_power y)].
+      mem x (non_empty_power y) <-> subset x y /\ not x = empty
+
+  meta "rewrite" prop mem_power
+  meta "rewrite" prop mem_non_empty_power
+
+end
+
+(** {2 Relations}
+
+Relations between two sets
+
+*)
+
+theory Relation
+
+  use export set.Set
+
+  type rel 'a 'b = set ('a , 'b)
+
+  function relation (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_relation:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (relation s t) <->
+       (forall x:'a, y:'b. mem (x,y) f -> mem x s /\ mem y t)
+
+  meta "rewrite" prop mem_relation
+
+end
+
+(** {2 Composition}
+
+Composition of relations
+
+*)
+
+theory Composition
+
+  use import Relation
+
+  function semicolon (rel 'a 'b) (rel 'b 'c) : (rel 'a 'c)
+
+  axiom semicolon_def:
+    forall x:'a, z:'c, p:rel 'a 'b, q:rel 'b 'c.
+    mem (x,z) (semicolon p q) <->
+      exists y:'b. mem (x,y) p /\ mem (y,z) q
+
+  function direct_product (rel 'a 'b) (rel 'a 'c) : set ('a, ('b, 'c))
+
+  axiom direct_product_def:
+    forall e:('t,('u,'v)), r1:rel 't 'u, r2:rel 't 'v
+       [mem e (direct_product r1 r2)].
+    mem e (direct_product r1 r2) <->
+      exists x:'t, y:'u, z:'v.
+        (x,(y,z))=e /\ mem (x,y) r1 /\ mem (x, z) r2
+
+(* another approach, don't work better
+  axiom direct_product_def:
+    forall e:('t,('u,'v)), x:'t, y:'u, z:'v, r1:rel 't 'u, r2:rel 't 'v.
+    (mem e (direct_product r1 r2) /\ e=(x,(y,z)) ) <->
+         mem (x,y) r1 /\ mem (x, z) r2
+*)
+
+  function parallel_product (rel 'a 'b) (rel 'c 'd) : set (('a, 'c), ('b, 'd))
+
+  axiom parallel_product_def:
+    forall e:(('t,'v),('u,'w)), r1:rel 't 'u, r2:rel 'v 'w.
+      mem e (parallel_product r1 r2) <->
+        exists x:'t, y:'v, z:'u, a:'w.
+          ((x,y),(z,a))=e /\ mem (x,z) r1 /\ mem (y,a) r2
+
+
+  meta "rewrite" prop semicolon_def
+  meta "rewrite" prop direct_product_def
+  meta "rewrite" prop parallel_product_def
+
+end
+
+
+(** {2 Domain, Range, Inverse}
+
+Domain, Range and inverse of a relation
+
+*)
+
+theory InverseDomRan
+
+  use export Relation
+
+  function inverse (rel 'a 'b) : rel 'b 'a
+
+  axiom Inverse_def:
+    forall r : rel 'a 'b. forall x : 'a, y : 'b.
+      mem (y,x) (inverse r) <-> mem (x,y) r
+
+  function dom (rel 'a 'b) : set 'a
+
+  axiom dom_def:
+    forall r : rel 'a 'b. forall x : 'a.
+      mem x (dom r) <-> exists y : 'b. mem (x,y) r
+
+  function ran (rel 'a 'b) : set 'b
+
+  axiom ran_def:
+    forall r : rel 'a 'b. forall y : 'b.
+      mem y (ran r) <-> exists x : 'a. mem (x,y) r
+
+  meta "rewrite" prop Inverse_def
+  meta "rewrite" prop dom_def
+  meta "rewrite" prop ran_def
+
+end
+
+
+
+(** {2 Image}
+
+Image by a relation
+
+*)
+
+theory Image
+
+  use export Relation
+
+  function image (r : rel 'a 'b) (dom : set 'a) : set 'b
+
+  axiom mem_image:
+    forall r : rel 'a 'b, dom : set 'a, y : 'b [mem y (image r dom)].
+    mem y (image r dom) <-> exists x: 'a. mem x dom /\ mem (x,y) r
+
+  meta "rewrite" prop mem_image
+
+end
+
+
+
+(** {2 Functions}
+
+Partial functions as relations
+
+*)
+
+theory Function
+
+  use export Relation
+
+  (** operator  A +-> B : set of partial functions from A to B,
+     seen as a relation
+  *)
+
+  function (+->) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_function:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s +-> t) <->
+       (forall x:'a, y:'b. mem (x,y) f -> mem x s /\ mem y t)
+       /\
+       (forall x:'a, y1 y2:'b. mem (x,y1) f /\ mem (x,y2) f -> y1=y2)
+
+  use import InverseDomRan
+
+  function (-->) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_total_functions:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s --> t) <-> mem f (s +-> t) /\ dom f = s
+
+  function apply (rel 'a 'b) 'a : 'b
+
+  axiom apply_def0:
+     forall f:rel 'a 'b, s:set 'a, t:set 'b, a:'a.
+       mem f (s +-> t) /\ mem a (dom f) -> mem (a, apply f a) f
+
+  axiom apply_def1:
+     forall f:rel 'a 'b, s:set 'a, t:set 'b, a:'a.
+       mem f (s --> t) /\ mem a s -> mem (a, apply f a) f
+
+  axiom apply_def2:
+     forall f:rel 'a 'b, s:set 'a, t:set 'b, a:'a, b:'b.
+       mem f (s +-> t) /\ mem (a,b) f -> apply f a = b
+
+  use import Composition
+
+  (* operators ">+>" (partial injection) and ">->" (total injection) *)
+
+  function (>+>) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_partial_injection:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s >+> t) <-> mem f (s +-> t) /\ mem (inverse f) (t +-> s)
+
+  function (>->) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_total_injection:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s >-> t) <-> mem f (s >+> t) /\ mem f (s --> t)
+
+  (* operators "+->>" (partial surjection) and "-->>" (total surjection) *)
+
+  function (+->>) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_partial_surjection:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s +->> t) <-> mem f (s +-> t) /\ ran f = t
+
+  function (-->>) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_total_surjection:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s -->> t) <-> mem f (s +->> t) /\ mem f (s --> t)
+
+  (* operators ">+>>" (partial bijection) and ">->>" (total bijection) *)
+
+  function (>+>>) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_partial_bijection:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s >+>> t) <-> mem f (s >+> t) /\ mem f (s +->> t)
+
+  function (>->>) (s:set 'a) (t:set 'b) : set (rel 'a 'b)
+
+  axiom mem_total_bijection:
+    forall f:rel 'a 'b, s:set 'a, t:set 'b.
+      mem f (s >->> t) <-> mem f (s >-> t) /\ mem f (s -->> t)
+
+  meta "rewrite" prop mem_function
+  meta "rewrite" prop mem_total_functions
+  meta "rewrite" prop mem_partial_injection
+  meta "rewrite" prop mem_total_injection
+  meta "rewrite" prop mem_partial_surjection
+  meta "rewrite" prop mem_total_surjection
+  meta "rewrite" prop mem_partial_bijection
+  meta "rewrite" prop mem_total_bijection
+
+end
+
+(** {2 restriction}
+
+*)
+
+theory Restriction
+
+  use export Relation
+  use import InverseDomRan
+
+  (* FIXME: the subset hypothesis for f comes from the B-Book.
+     f <| r = id(f);r which requires f \subseteq U and r: U <-> V
+   *)
+
+  function (|>) (rel 'a 'b) (set 'b) : rel 'a 'b
+  function range_restriction (r: rel 'a 'b) (f: set 'b) : rel 'a 'b = r |> f
+
+  axiom range_restriction_def:
+     forall  r:rel 'e1 'e2, f:set 'e2. subset f (ran r) ->
+        forall x:'e1, y:'e2.
+           mem (x, y) (r |> f) <-> mem (x, y) r /\ mem y f
+
+  function (|>>) (rel 'a 'b) (set 'b) : rel 'a 'b
+  function range_substraction (r: rel 'a 'b) (f: set 'b) : rel 'a 'b = r |>> f
+
+  axiom range_substraction_def:
+     forall  r:rel 'e1 'e2, f:set 'e2. subset f (ran r) ->
+        forall x:'e1, y:'e2.
+           mem (x, y) (r |>> f) <-> mem (x, y) r /\ not (mem y f)
+
+
+  function (<|) (set 'a) (rel 'a 'b) : rel 'a 'b
+  function domain_restriction (f: set 'a) (r: rel 'a 'b) : rel 'a 'b = f <| r
+
+  axiom domain_restriction_def:
+     forall r:rel 'e1 'e2, f:set 'e1. subset f (dom r) ->
+        forall x:'e1, y:'e2.
+          mem (x, y) (f <| r) <-> mem (x, y) r /\ mem x f
+
+
+  function (<<|) (set 'a) (rel 'a 'b) : rel 'a 'b
+  function domain_substraction (f: set 'a) (r: rel 'a 'b) : rel 'a 'b = f <<| r
+
+  axiom domain_substraction_def:
+     forall r:rel 'e1 'e2, f:set 'e1. subset f (dom r) ->
+        forall x:'e1, y:'e2.
+           mem (x, y) (f <<| r) <-> mem (x, y) r /\ not (mem x f)
+
+   meta "rewrite_def" function range_restriction
+   meta "rewrite_def" function range_substraction
+   meta "rewrite_def" function domain_restriction
+   meta "rewrite_def" function domain_substraction
+
+end
+
+(** {2 overriding}
+
+operator <+
+
+Bbook: Section 2.4.2
+
+*)
+
+theory Overriding
+
+use import Relation
+use import InverseDomRan
+
+function (<+) (rel 'a 'b) (rel 'a 'b) : (rel 'a 'b)
+
+axiom overriding_def:
+  forall x:'a, y:'b, q r : rel 'a 'b.
+    mem (x,y) (q <+ r) <->
+      (if mem x (dom r) then mem (x,y) r else mem (x,y) q)
+
+use import Function
+
+end
+
+
+
+
+(** {2 Identity}
+
+*)
+
+theory Identity
+
+  use export Function
+
+  function id (set 'a) : rel 'a 'a
+
+  axiom id_def: forall x y:'a, s:set 'a.
+    mem (x,y) (id s) <-> mem x s /\ x=y
+
+  use import InverseDomRan
+
+  meta "rewrite" prop id_def
+
+end
+
+
+
+
+(** {2 Sequences}
+
+    Finite sequences as total functions on domain 1..n
+
+*)
+
+
+theory Sequence
+
+  use import Function
+  use import Interval
+  use import Identity
+
+  (* a sequence of length n is any total function on domain 1..n *)
+  function seq_length (n:int) (s : set 'a) : set (rel int 'a) =
+    (mk 1 n) --> s
+
+  function size (rel int 'a) : int
+
+  axiom size_def : forall n:int, s:set 'a, r: rel int 'a.
+     n >= 0 /\ mem r (seq_length n s) -> size r = n
+
+  (* not realizable
+  axiom size_inversion : forall r: rel int 'a.
+     size r >= 0 -> exists s : set 'a. mem r (seq_length (size r) s)
+  *)
+
+  function seq (set 'a) : set (rel int 'a)
+
+  axiom seq_def : forall s:set 'a, r:rel int 'a.
+     mem r (seq s) <->
+        size r >= 0 /\ mem r (seq_length (size r) s)
+
+  function seq1 (set 'a) : set (rel int 'a)
+
+  axiom seq1_def: forall s: set 'a, r: rel int 'a.
+    mem r (seq1 s) <-> size r > 0 /\ mem r (seq s)
+  (* FIXME add seq1 axioms *)
+
+  (** B-book page 734 *)
+  function iseq (set 'a) : set (rel int 'a)
+
+  (* FIXME add iseq axioms *)
+
+  function iseq1 (set 'a) : set (rel int 'a)
+
+  (* FIXME add iseq1 axioms *)
+
+  function perm (set 'a) : set (rel int 'a)
+
+  (* FIXME add perm axioms *)
+
+  use import Restriction
+  (* FIXME:
+     The character '\'is not allowed to define infix operators in Why3:
+     "/|\" -> "/|" and "\|/" -> "/|"    *)
+   function (/|) (rel int 'a) int : rel int 'a
+   axiom head_restriction_def : forall s: rel int 'a, n: int.
+     mem n (Interval.mk 0 (size s)) ->
+       forall i: int, x: 'a.
+         mem (i, x) (s /| n) <-> mem (i, x) ((Interval.mk 1 n) <| s)
+
+   function (|/) (rel int 'a) int : rel int 'a
+   axiom tail_restriction_def : forall s: rel int 'a, n: int.
+     mem n (Interval.mk 0 (size s)) ->
+       forall i: int, x: 'a.
+         mem (i, x) (s |/ n) <-> mem (i + n, x) s
+
+  meta "rewrite" prop seq1_def
+  meta "rewrite_def" function seq_length
+
+end
+
+
+
+
+theory BList
+
+  use import Function
+
+  (* FIXME add insert_in_front, insert_at_tail, tail, last, first,
+     front, concatenation, conc axioms *)
+
+  function insert_in_front 'a (rel int 'a) : rel int 'a
+
+  function insert_at_tail (rel int 'a) 'a : rel int 'a
+
+  function tail (rel int 'a) : rel int 'a
+
+  function last (rel int 'a) : 'a
+
+  function first (rel int 'a) : 'a
+
+  function front (rel int 'a) : rel int 'a
+
+  function concatenation (rel int 'a) (rel int 'a) : rel int 'a
+
+  function conc (rel int (rel int 'a)) : rel int 'a
+
+end
+
+
+
+
+
+theory IsFinite
+
+   use import int.Int
+   use import set.Set
+
+   (* (is_finite_subset s1 s2 c) is true when s1 is a finite subset of
+      s2 of card c *)
+   inductive is_finite_subset (s1:set 'a) (s2:set 'a) (c:int) =
+     | Empty: forall s:set 'a. is_finite_subset empty s 0
+     | Add_mem: forall x:'a, s1 s2:set 'a, c:int.
+         is_finite_subset s1 s2 c -> mem x s2 -> mem x s1 ->
+         is_finite_subset (add x s1) s2 c
+     | Add_notmem: forall x:'a, s1 s2:set 'a, c:int.
+         is_finite_subset s1 s2 c -> mem x s2 -> not mem x s1 ->
+         is_finite_subset (add x s1) s2 (c+1)
+
+  use Interval
+
+  (* B operator "FIN" *)
+  function finite_subsets (s:set 'a) : set (set 'a)
+
+  axiom finite_subsets_def :
+    forall s x: set 'a.
+      mem x (finite_subsets s) <-> exists c:int. is_finite_subset x s c
+
+  (* B operator "FIN1" *)
+  function non_empty_finite_subsets (s:set 'a) : set (set 'a)
+
+  axiom non_empty_finite_subsets_def :
+    forall s x: set 'a.
+      mem x (non_empty_finite_subsets s) <-> exists c:int. is_finite_subset x s c /\ not x = empty
+
+  (* operator "card" *)
+
+  function card (s:set 'a) : int
+
+  axiom card_def :
+    forall s x: set 'a, c:int. is_finite_subset x s c -> card x = c
+
+  meta "rewrite" prop finite_subsets_def
+  meta "rewrite" prop non_empty_finite_subsets_def
+
+end
+
+
+
+
+theory PowerRelation
+
+  use export Relation
+  use export PowerSet
+  use import Function
+
+  function times (set 'a) (set 'b) : rel 'a 'b
+
+  axiom times_def:
+    forall a : set 'a, b : set 'b, x : 'a, y : 'b [mem (x,y) (times a b)].
+    mem (x,y) (times a b) <-> mem x a /\ mem y b
+
+  axiom monotonicity_62a:
+    forall u s:set 'a, v t:set 'b.
+      subset u s /\ subset v t -> subset (times u v) (times s t)
+
+  axiom subset_times_function:
+    forall x:'b, s:set 'a, t:set 'b.
+      mem x t -> mem (times s (singleton x)) (s --> t)
+
+  (* relations u v: Set of relations between sets u /\ v *)
+  function relations (u: set 'a) (v: set 'b) : set (rel 'a 'b) =
+    power(times u v)
+
+  (* following lemmas are needed to type relations *)
+
+  use import Function
+
+  meta "rewrite" prop times_def
+  meta "rewrite_def" function relations
+
+end
+
+
+
+theory MinMax
+  use export set.Set
+  use import int.Int
+  use import Interval
+  use import IsFinite
+
+  function min (set int) : int
+
+  axiom min_belongs:
+    forall s: (set int).
+      subset s natural -> s <> empty -> mem (min s) s
+
+  axiom min_is_min:
+    forall s: (set int).  subset s natural -> s <> empty ->
+        forall x : int.  mem x s -> min s <= x
+
+  function max (set int) : int
+
+  axiom max_belongs:
+    forall s: (set int).
+      mem s (non_empty_finite_subsets natural) -> mem (max s) s
+
+  axiom max_is_max:
+    forall s : (set int).  mem s (non_empty_finite_subsets natural) ->
+      forall x: int.  mem x s -> x <= max s
+
+end
+
+
+
+
+theory Iteration
+  use export Relation
+  use export Identity
+  use export InverseDomRan
+  use export Composition
+  use import int.Int
+
+  function iterate (rel 'a 'a) int : (rel 'a 'a)
+
+(*
+  axiom iterate_def:
+    forall a : rel 'a 'a, b :int.
+    (iterate a b) = if (b = 0) then (id (dom a)) else (semicolon (iterate a (b - 1)) a)
+*)
+  axiom iterate_zero:
+    forall r : rel 'a 'a. iterate r 0 = id (dom r)
+  axiom iterate_succ:
+    forall r : rel 'a 'a, n:int. n > 0 ->
+      iterate r n = semicolon r (iterate r (n-1))
+
+  function closure (rel 'a 'a) : (rel 'a 'a)
+
+  axiom closure_def:
+    forall r : rel 'a 'a, u : ('a,'a).
+    mem u (closure r) <-> exists x : int. x >= 0 /\ mem u (iterate r x)
+
+  function closure1 (rel 'a 'a) : (rel 'a 'a)
+
+  axiom closure1_def:
+    forall r : rel 'a 'a, u : ('a,'a).
+    (mem u (closure1 r)) <-> exists x : int. x > 0 /\ mem u (iterate r x)
+
+  meta "rewrite" prop iterate_zero
+  meta "rewrite" prop iterate_succ
+  meta "rewrite" prop closure_def
+  meta "rewrite" prop closure1_def
+
+end
+
+
+
+theory Projection
+
+  use export Function
+
+  function prj1 ((set 'a) , (set 'b)) : (rel ('a , 'b) 'a)
+
+  axiom prj1_def:
+    forall a : (set 'a), b : (set 'b), x : 'a, y : 'b.
+    (mem x a) /\ (mem y b) ->
+    (apply (prj1 (a , b)) (x, y)) = x
+
+  function prj2 ((set 'a) ,(set 'b)) : (rel ('a , 'b) 'b)
+
+  axiom prj2_def:
+    forall a : (set 'a), b : (set 'b), x : 'a, y : 'b.
+    (mem x a) /\ (mem y b) ->
+    (apply (prj2 (a , b)) (x, y)) = y
+
+end
+
+
+
+theory GeneralizedUnion
+
+  use export Function
+
+  function generalized_union (set (set 'a)) : (set 'a)
+
+  axiom generalized_union_def:
+     forall s: set (set 'a), x: 'a.
+        mem x (generalized_union s) <-> exists y: set 'a. mem x y /\ mem y s
+
+  meta "rewrite" prop generalized_union_def
+
+end
+
+
+theory SumSigma
+  use export set.Set
+  use import bool.Bool
+  use import set.SetComprehension
+  use import int.Int
+
+  (* NB: very first defintion for Sigma:
+           not syntactically equivalent to the B-Book's one
+           but very convenient for the translation done by bpo2why
+  *)
+  function sum (set int) : int
+
+  axiom sum_def0 : sum empty = 0
+
+  axiom sum_def1 : forall s: set int, x: int.
+    mem x s -> sum s = x + sum (remove x s)
+
+  function sigma (p: 'a -> bool) (f: 'a -> int) : int =
+    sum (map f (comprehension p))
+
+  meta "rewrite" prop sum_def0
+  meta "rewrite_def" function sigma
+
+end

@@ -1,0 +1,2564 @@
+theory B_book_lemmas
+
+  
+use import B_modulo.Bmod_SETGEN
+(*use import B_modulo.Bmod_BOOL
+use import B_modulo.Interval*)
+use import B_modulo.Bmod_SET
+(*use import B_modulo.Bmod_SEQ
+use import B_modulo.Bmod_LIST
+use import B_modulo.Bmod_ISFIN
+use import B_modulo.Bmod_MINMAX
+use import B_modulo.Bmod_ITERATE
+use import B_modulo.Bmod_GENERALIZED
+  type uninterpreted_type
+*)
+
+
+
+
+
+
+(* ---------- ---------- ---------- *)
+
+  (* set inclusion / page 62 *)
+
+  (* some goals about subset *)
+  (* monotonicity_3 and inclusion_1 are missing *)
+
+  goal subset_reflexivity : 
+    forall s: set 'a.
+    subset s s
+
+  goal subset_transitivity: 
+    forall s t u: set 'a.
+    subset s t 
+    /\ subset t u 
+    -> subset s u
+
+  goal subset_antisymmetry: 
+    forall s t: set 'a.
+    subset s t 
+    /\ subset t s 
+    -> s == t
+
+  goal subset_monotonicity_1: 
+    forall s t u v: set 'a.
+    subset u s 
+    /\ subset v t 
+    -> subset (times u v) (times s t)
+
+  goal subset_monotonicity_2: 
+    forall s t: set 'a.
+    subset s t 
+    -> subset (power s) (power t)
+
+  goal subset_inclusion_2: 
+    forall e: 'a, s t: set 'a.
+    mem e s 
+    /\ subset s t 
+    -> mem e t
+
+  (* property 2.1.1 *)
+  goal property_211:
+    forall s t: set 'a.
+    subset s t
+    -> subset (power s) (power t)
+
+  (* some properties page 75 - 76 *)
+
+  (* commutativity *)
+  goal union_commutativity:
+    forall a b: set 'a.
+    (union a b) 
+    == (union b a)
+
+  goal inter_commutativity:
+    forall a b: set 'a.
+    (inter a b) 
+    == (inter b a)
+
+  (* associativity *)
+  goal union_associativity:
+    forall a b c: set 'a.
+    (union (union a b) c) 
+    == (union a (union b c))
+
+  goal inter_associativity:
+    forall a b c: set 'a.
+    (inter (inter a b) c) 
+    == (inter a (inter b c))
+ 
+  (* distributivity *)
+  goal inter_union_distributivity:
+    forall a b c: set 'a.
+    (inter a (union b c)) 
+    == (union (inter a b) (inter a c))
+
+  goal union_inter_distributivity: 
+    forall a b c: set 'a.
+    (union a (inter b c)) 
+    == (inter (union a b) (union a c))
+
+  goal diff_union_distributivity:
+    forall a b c: set 'a.
+    (diff a (union b c)) 
+    == (inter (diff a b) (diff a c))
+
+  goal diff_inter_distributivity:
+    forall a b c: set 'a.
+    (diff a (inter b c)) 
+    == (union (diff a b) (diff a c))
+
+  goal diff_diff_distributivity:
+    forall a b c: set 'a.
+    (diff a (diff b c)) 
+    == (union (diff a b) (inter a c))
+
+  goal union_diff_distributivity:
+    forall a b c: set 'a.
+    (diff (union a b) c) 
+    == (union (diff a c) (diff b c))
+
+  goal inter_diff_distributivity:
+    forall a b c: set 'a.
+    (diff (inter a b) c) 
+    == (inter (diff a c) b)
+
+  goal union_times_distributivity:
+    forall a b t: set 'a.
+    (times (union a b) t) 
+    == (union (times a t) (times b t))
+
+  goal inter_times_distributivity:
+    forall a b t: set 'a.
+    (times (inter a b) t) 
+    == (inter (times a t) (times b t))
+
+  goal diff_times_distributivity:
+    forall a b t: set 'a.
+    (times (diff a b) t) 
+    == (diff (times a t) (times b t))
+
+  goal times_union_distributivity:
+    forall a b t: set 'a.
+    (times t (union a b)) 
+    == (union (times t a) (times t b))
+
+  goal times_inter_distributivity:
+    forall a b t: set 'a.
+    (times t (inter a b)) 
+    == (inter (times t a) (times t b))
+
+  goal times_diff_distributivity:
+    forall a b t: set 'a.
+    (times t (diff a b)) 
+    == (diff (times t a) (times t b))
+
+  (* excluded middle *)
+  goal union_excluded_middle:
+    forall s a: set 'a.
+    subset a s 
+    -> (union a (diff s a)) == s
+
+  goal inter_excluded_middle:
+    forall s a: set 'a.
+    subset a s 
+    -> (inter a (diff s a)) == empty
+
+  (* idempotence *)
+  goal union_idempotence:
+    forall a: set 'a.
+    (union a a) 
+    == a
+
+  goal inter_idempotence:
+    forall a: set 'a.
+    (inter a a) 
+    == a
+
+  (* neutral element *)
+  goal union_neutral_element:
+    forall a: set 'a.
+    (union a empty) 
+    == a
+
+  goal inter_neutral_element:
+    forall s a: set 'a.
+    subset a s 
+    -> (inter a s) == a
+
+  (* absorption *)
+  goal inter_union_absorption:
+    forall a b: set 'a.
+    (inter a (union a b)) 
+    == a
+
+  goal union_inter_absorption:
+    forall a b: set 'a.
+    (union a (inter a b)) 
+    == a
+
+  goal inter_absorption:
+    forall a: set 'a.
+    (inter empty a) 
+    == empty
+
+  goal union_absorption:
+    forall s a: set 'a.
+    subset a s 
+    -> (union s a) == s
+
+  goal diff_absorption_1:
+    forall a: set 'a.
+    (diff empty a) 
+    == empty
+    
+  goal diff_absorption_2:
+    forall a: set 'a.
+    (diff a empty) 
+    == a
+
+  (* empty *)
+  goal diff_empty:
+    forall s: set 'a.
+    (diff s s) 
+    == empty
+
+  (* double complementation *)
+  goal double_complementation:
+    forall s a: set 'a.
+    subset a s 
+    -> a == (diff s (diff s a))
+
+  (* monotonicity *)
+  goal monotonicity_1:
+    forall a b c: set 'a.
+    subset b c 
+    -> (subset (inter a b) (inter a c))
+
+  goal monotonicity_2:
+    forall a b c: set 'a.
+    subset b c 
+    -> (subset (union a b) (union a c))
+
+  goal monotonicity_3:
+    forall a b c: set 'a.
+    subset b c 
+    -> (subset (diff b a) (diff c a))
+
+  goal monotonicity_4:
+    forall a b c: set 'a.
+    subset b c 
+    -> (subset (diff a c) (diff a b))
+
+  goal monotonicity_5:
+    forall s b c: set 'a.
+    (subset b s 
+     /\ subset c s) 
+    -> (subset b c 
+        -> (subset (diff s c) (diff s b)))
+
+  (* de morgan *)
+  goal union_de_morgan:
+    forall s a b: set 'a.
+    (subset a s 
+     /\ subset b s) 
+    -> (diff s (union a b)) 
+        == (inter (diff s a) (diff s b))
+
+  goal inter_de_morgan:
+    forall s a b: set 'a.
+    (subset a s 
+     /\ subset b s)
+    -> (diff s (inter a b)) 
+        == (union (diff s a) (diff s b))
+
+  (* inclusion *)
+  goal inclusion_1:
+    forall a b: set 'a.
+    subset a (union a b)
+
+  goal inclusion_2:
+    forall a b: set 'a.
+    subset (inter a b) a
+
+  goal inclusion_3:
+    forall s a b c: set 'a.
+    (subset a s 
+     /\ subset b s 
+     /\ subset c s)
+    -> (subset (inter a b) c 
+        <-> subset a (union (diff s b) c))
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+  (* property 2.5.1 *)
+  goal property_251:
+    forall s: set 'a, t: set 'b, f: set ('a, 'b).
+    mem f (s --> t)
+    <-> (forall x: 'a.
+    	 mem x s
+	 -> (mem (domain_restriction (singleton x) f) ((singleton x) --> t)))
+
+
+
+
+(* ---------- ---------- ---------- *)
+
+  (* membership property / page 95 *)
+  
+  (* inverse *)
+  goal mem_inverse_1:
+    forall s: set 'a, t: set 'b, r: set ('a, 'b).
+    mem r (relation s t) 
+    -> mem (inverse r) (relation t s)
+
+  goal mem_inverse_2:
+    forall s: set 'a, t: set 'b, f: set ('a, 'b).
+    mem f (s >+> t) 
+    -> mem (inverse f) (t +-> s)
+
+  goal mem_inverse_3:
+    forall s: set 'a, t: set 'b, f: set ('a, 'b).
+    mem f (s >+> t) 
+    -> mem (inverse f) (t >+> s)
+
+  goal mem_inverse_4:
+    forall s: set 'a, t: set 'b, f: set ('a, 'b).
+    mem f (s >->> t) 
+    -> mem (inverse f) (t >->> s)
+
+  (* dom / ran *)
+  goal mem_dom_1:
+    forall s: set 'a, t: set 'b, r: set ('a, 'b).
+    mem r (relation s t)
+    -> subset (dom r) s
+
+  goal mem_ran_1:
+    forall s: set 'a, t: set 'b, r: set ('a, 'b).
+    mem r (relation s t)
+    -> subset (ran r) t
+
+  (* semicolon *)
+  goal mem_semicolon_1:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t u))
+    -> mem (semicolon p q) 
+       	   (relation s u)
+
+  goal mem_semicolon_2:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s +-> t) 
+     /\ mem g (t +-> u))
+    -> mem (semicolon f g) 
+       	   (s +-> u)
+
+  goal mem_semicolon_3:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s >+> t) 
+     /\ mem g (t >+> u))
+    -> mem (semicolon f g) 
+       	   (s >+> u)
+
+  goal mem_semicolon_4:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s +->> t) 
+     /\ mem g (t +->> u))
+    -> mem (semicolon f g) 
+       	   (s +->> u)
+
+  goal mem_semicolon_5:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s -->> t) 
+     /\ mem g (t --> u))
+    -> mem (semicolon f g) 
+       	   (s --> u)
+
+  goal mem_semicolon_6:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s >->> t) 
+     /\ mem g (t >-> u))
+    -> mem (semicolon f g) 
+       	   (s >-> u)
+
+  goal mem_semicolon_7:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s -->> t) 
+     /\ mem g (t -->> u))
+    -> mem (semicolon f g) 
+       	   (s -->> u)
+
+  goal mem_semicolon_8:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('b, 'c).
+    (mem f (s >->> t) 
+     /\ mem g (t >->> u))
+    -> mem (semicolon f g)
+       	   (s >->> u)
+
+  (* id *)
+  goal mem_id_1:
+    forall s: set 'a.
+    mem (id s) (s >->> s)
+
+  (* restriction / substraction *)
+  goal mem_restriction_1:
+    forall s: set 'a, t: set 'b, u: set 'a, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> mem (domain_restriction u r) 
+       	   (relation u t)
+
+  goal mem_restriction_2:
+    forall s: set 'a, t: set 'b, v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t)
+    -> mem (range_restriction r v) 
+       	   (relation s v)
+
+  goal mem_substraction_1:
+    forall s: set 'a, t: set 'b, u: set 'a, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> mem (domain_substraction u r) 
+       	   (relation (diff s u) t)
+
+  goal mem_substraction_2:
+    forall s: set 'a, t: set 'b, v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t)
+    -> mem (range_substraction r v) 
+       	   (relation s (diff t v))
+
+  (* image *)
+  goal mem_image_1:
+    forall s: set 'a, t: set 'b, u: set 'a, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset u s)
+    -> subset (image r u) t
+
+  (* overriding *)
+  goal mem_overriding_1:
+    forall s: set 'a, t: set 'b, 
+    	   p: set ('a, 'b), q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> mem (p <+ q) (relation s t)
+
+  goal mem_overriding_2: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b), g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s +-> t))
+    -> mem (f <+ g) (s +-> t)
+
+  goal mem_overriding_3: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b), g: set ('a, 'b).
+    (mem f (s >+> t) 
+     /\ mem g (s >+> t)
+     /\ (inter (ran g) (ran (domain_substraction (dom g) f))) 
+     	 == empty)
+    -> mem (f <+ g) 
+       	   (s >+> t)
+
+  goal mem_overriding_4: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b), g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s +->> t))
+    -> mem (f <+ g) 
+       	   (s +->> t)
+
+  goal mem_overriding_5: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b), g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s --> t))
+    -> mem (f <+ g) 
+       	   (s --> t)
+
+  goal mem_overriding_6: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b), g: set ('a, 'b).
+    (mem f (s --> t) 
+     /\ mem g (s +-> t))
+    -> mem (f <+ g) 
+       	   (s --> t)
+
+  goal mem_overriding_7: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b), g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s -->> t))
+    -> mem (f <+ g) 
+       	   (s -->> t)
+
+  (* direct_product *)
+  goal mem_direct_product_1:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('a, 'c).
+    (mem p (relation s t)
+     /\ mem q (relation s u))
+    -> mem (direct_product p q) 
+       	   (relation s (times t u))
+
+  goal mem_direct_product_2:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('a, 'c).
+    (mem f (s +-> t)
+     /\ mem g (s +-> u))
+    -> mem (direct_product f g) 
+       	   (s +-> (times t u))
+
+  goal mem_direct_product_3:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('a, 'c).
+    (mem f (s >+> t) 
+     /\ mem g (s >+> u))
+    -> mem (direct_product f g) 
+       	   (s >+> (times t u))
+
+  goal mem_direct_product_4:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('a, 'c).
+    (mem f (s --> t) 
+     /\ mem g (s --> u))
+    -> mem (direct_product f g) 
+       	   (s --> (times t u))
+
+  goal mem_direct_product_5:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('a, 'c).
+    (mem f (s >-> t)
+     /\ mem g (s >-> u))
+    -> mem (direct_product f g) 
+       	   (s >-> (times t u))
+
+  goal mem_direct_product_6:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('a, 'c).
+    (mem f (s -->> t)
+     /\ mem g (s -->> u))
+    -> mem (direct_product f g) 
+       	   (s -->> (times t u))
+
+  goal mem_direct_product_7:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   f: set ('a, 'b), g: set ('a, 'c).
+    (mem f (s >->> t)
+     /\ mem g (s >->> u))
+    -> mem (direct_product f g) 
+       	   (s >->> (times t u))
+
+  (* proj *)
+  goal mem_proj_1:
+    forall s: set 'a, t: set 'b.
+    mem (prj1 (s, t)) ((times s t) --> s)
+ 
+  goal mem_proj_2:
+    forall s: set 'a, t: set 'b.
+    mem (prj2 (s, t)) ((times s t) --> t)
+
+  (* parallel product *)
+  goal mem_parallel_product_1:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   p: set ('a, 'b), q: set ('c, 'd).
+    (mem p (relation s t) 
+     /\ mem q (relation u v))
+    -> mem (parallel_product p q) 
+       	   (relation (times s u) (times t v))
+
+  goal mem_parallel_product_2:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s +-> t) 
+     /\ mem g (u +-> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) +-> (times t v))
+
+  goal mem_parallel_product_3:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s >+> t) 
+     /\ mem g (u >+> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) >+> (times t v))
+
+  goal mem_parallel_product_4:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s +->> t) 
+     /\ mem g (u +->> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) +->> (times t v))
+
+  goal mem_parallel_product_5:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s --> t) 
+     /\ mem g (u --> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) --> (times t v))
+
+  goal mem_parallel_product_6:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s >-> t) 
+     /\ mem g (u >-> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) >-> (times t v))
+
+  goal mem_parallel_product_7:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s -->> t) 
+     /\ mem g (u -->> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) -->> (times t v))
+
+  goal mem_parallel_product_8:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   f: set ('a, 'b), g: set ('c, 'd).
+    (mem f (s >->> t) 
+     /\ mem g (u >->> v))
+    -> mem (parallel_product f g) 
+       	   ((times s u) >->> (times t v))
+
+  (* union / inter / ... *)
+  goal mem_union_1:
+    forall s: set 'a, t: set 'b, 
+    	   f g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s +-> t)
+     /\ (domain_restriction (dom g) f) == (domain_restriction (dom f) g))
+    -> mem (union f g) 
+       	   (s +-> t)
+
+  goal mem_union_2:
+    forall s: set 'a, t: set 'b, 
+    	   f g: set ('a, 'b).
+    (mem f (s >+> t) 
+     /\ mem g (s >+> t)
+     /\ (domain_restriction (dom g) f) == (domain_restriction (dom f) g)
+     /\ (range_restriction f (ran g)) == (range_restriction g (ran f)))
+    -> mem (union f g) 
+       	   (s >+> t)
+   
+  goal mem_inter_1:
+    forall s: set 'a, t: set 'b,
+    	   f g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (relation s t))
+    -> mem (inter f g) 
+       	   (s +-> t)
+
+  goal mem_inter_2:
+    forall s: set 'a, t: set 'b,
+    	   f g: set ('a, 'b).
+    (mem f (s >+> t) 
+     /\ mem g (relation s t))
+    -> mem (inter f g) 
+       	   (s >+> t)
+
+  goal mem_diff_1:
+    forall s: set 'a, t: set 'b,
+    	   f g: set ('a, 'b).
+    (mem f (s >+> t) 
+     /\ mem g (relation s t))
+    -> mem (diff f g) 
+       	   (s >+> t)
+
+  goal mem_singleton_1:
+    forall s: set 'a, t: set 'b,
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ mem y t)
+    -> mem (singleton (x, y)) 
+       	   (s +-> t)
+
+  goal mem_times_1:
+    forall s: set 'a, t: set 'b.
+    mem (times s t) (relation s t)
+
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+  (* monotonicity laws / page 96 *)
+
+  (* relation / function *)
+  goal monot_relation:
+    forall s u: set 'a, t v: set 'b.
+    (subset u s
+     /\ subset v t)
+    -> subset (relation u v)
+       		(relation s t)
+
+  goal monot_function_1:
+    forall s u: set 'a, t v: set 'b.
+    (subset u s
+     /\ subset v t)
+    -> subset (u +-> v)
+       		(s +-> t)
+
+  goal monot_function_2:
+    forall s: set 'a, t: set 'b, u: set 'a, v: set 'b.
+    (subset u s
+     /\ subset v t)
+    -> subset (u >+> v)
+       		(s >+> t)
+
+  goal monot_function_3:
+    forall s: set 'a, t v: set 'b.
+    subset v t
+    -> subset (s --> v)
+       		(s --> t)
+
+  goal monot_function_4:
+    forall s: set 'a, t: set 'b, v: set 'b.
+    subset v t
+    -> subset (s >-> v)
+       		(s >-> t)
+
+  goal monot_function_5:
+    forall s u: set 'a, t: set 'b.
+    subset u s
+    -> subset (u +->> t)
+       		(s +->> t)
+
+  (* id *)
+  goal monot_inverse:
+    forall s: set 'a, t: set 'b, 
+    	   p: set ('a, 'b), r: set ('a, 'b).
+    mem p (relation s t)
+    -> (subset r p 
+        -> subset (inverse r) (inverse p))
+
+  (* dom / ran *)
+  goal monot_dom: 
+    forall s: set 'a, t: set 'b, 
+    	   p r: set ('a, 'b).
+    mem p (relation s t)
+    -> (subset r p
+        -> subset (dom r) (dom p))
+
+  goal monot_ran: 
+    forall s: set 'a, t: set 'b, 
+    	   p r: set ('a, 'b).
+    mem p (relation s t)
+    -> (subset r p
+        -> subset (ran r) (ran p))
+
+  (* semicolon *)
+  goal monot_semicolon: 
+    forall s: set 'a, t: set 'b, u: set 'c,
+    	   h p: set ('a, 'b), k q: set ('b, 'c).
+    (mem h (relation s t) 
+     /\ mem k (relation t u))
+    -> ((subset p h 
+         /\ subset q k)
+        -> subset (semicolon p q)
+       	   	    (semicolon h k))
+
+  (* id *)
+  goal monot_id:
+    forall s u: set 'a.
+    subset u s 
+    -> subset (id u) (id s)
+
+  (* restriction / substraction *)
+  goal monot_restriction_1:
+    forall s u v: set 'a, t: set 'b,
+    	   p r: set ('a, 'b).
+    (mem p (relation s t)
+     /\ subset v s)
+    -> ((subset u v
+         /\ subset r p)
+        -> subset (domain_restriction u r)
+       	   	    (domain_restriction v p))
+
+  goal monot_restriction_2:
+    forall s: set 'a, t u v: set 'b,
+    	   p r: set ('a, 'b).
+    (mem p (relation s t)
+     /\ subset v t)
+    -> ((subset r p
+         /\ subset u v)
+        -> subset (range_restriction r u)
+       	  	    (range_restriction p v))
+
+  goal monot_substraction_1:
+    forall s u v: set 'a, t: set 'b,
+    	   p r: set ('a, 'b).
+    (mem p (relation s t)
+     /\ subset u s)
+    -> ((subset v u 
+         /\ subset r p)
+        -> subset (domain_substraction u r)
+       	  	    (domain_substraction v p))
+
+  goal monot_substraction_2:
+    forall s: set 'a, t u v: set 'b, 
+    	   p r: set ('a, 'b).
+    (mem p (relation s t)
+     /\ subset u t)
+    -> ((subset r p
+         /\ subset v u)
+	-> subset (range_substraction r u)
+	   	    (range_substraction p v))
+
+  (* image / overriding / proj / parallel_product *)
+  goal monot_image:
+    forall s u v: set 'a, t: set 'b, 
+    	   p r: set ('a, 'b).
+    (mem p (relation s t)
+     /\ subset v s)
+    -> ((subset r p
+         /\ subset u v)
+	-> subset (image r u)
+	   	    (image p v))
+
+  goal monot_overriding: 
+    forall s: set 'a, t: set 'b, 
+    	   h q p: set ('a, 'b).
+    (mem h (relation s t)
+     /\ mem q (relation s t))
+    -> (subset p h
+        -> subset (p <+ q)
+	   	    (h <+ q))
+
+  goal monot_direct_product: 
+    forall s: set 'a, t: set 'b, u: set 'c,
+    	   h p: set ('a, 'b), k q: set ('a, 'c).
+    (mem h (relation s t)
+     /\ mem k (relation s u))
+    -> ((subset p h 
+         /\ subset q k)
+	-> subset (direct_product p q)
+	   	    (direct_product h k))
+
+  goal monot_proj_1: 
+    forall s u: set 'a, t v: set 'b.
+    (subset u s 
+     /\ subset v t)
+    -> subset (prj1 (u, v)) 
+       		(prj1 (s, t))
+
+  goal monot_proj_2:
+    forall s u: set 'a, t v: set 'b.
+    (subset u s
+     /\ subset v t)
+    -> subset (prj2 (u, v))
+       		(prj2 (s, t))
+
+  goal monot_parallel_product:
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   h p: set ('a, 'b), k q: set ('c, 'd).
+    (mem h (relation s t)
+     /\ mem k (relation u v))
+    -> ((subset p h
+         /\ subset q k)
+	-> subset (parallel_product p q)
+	   	    (parallel_product h k))
+
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+(* inclusion property / page 97 *)
+
+  (* function *)
+  goal inclusion_function_1:
+    forall s: set 'a, t: set 'b.
+    subset (s >->> t)
+    	     (s -->> t)
+
+  goal inclusion_function_2:
+    forall s: set 'a, t: set 'b.
+    subset (s >->> t)
+    	     (s >-> t)
+
+  goal inclusion_function_3:
+    forall s: set 'a, t: set 'b.
+    subset (s -->> t)
+    	     (s +->> t)
+
+  goal inclusion_function_4:
+    forall s: set 'a, t: set 'b.
+    subset (s >-> t)
+    	     (s >+> t)
+
+  goal inclusion_function_5:
+    forall s: set 'a, t: set 'b.
+    subset (s -->> t)
+    	     (s --> t)
+
+  goal inclusion_function_6:
+    forall s: set 'a, t: set 'b.
+    subset (s >-> t)
+    	     (s --> t)
+
+  goal inclusion_function_7:
+    forall s: set 'a, t: set 'b.
+    subset (s +->> t)
+    	     (s +-> t)
+
+  goal inclusion_function_8:
+    forall s: set 'a, t: set 'b.
+    subset (s >+> t)
+    	     (s +-> t)
+
+  goal inclusion_function_9:
+    forall s: set 'a, t: set 'b.
+    subset (s --> t)
+    	     (s +-> t)
+
+  goal inclusion_function_10:
+    forall s: set 'a, t: set 'b.
+    subset (s +-> t)
+    	     (relation s t)
+
+  (* id *)
+  goal inclusion_id_1: 
+    forall s: set 'a, t: set 'b,
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> subset (id (dom r)) 
+       		(semicolon r (inverse r))
+
+  goal inclusion_id_2: 
+    forall s: set 'a, t: set 'b,
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> subset (id (ran r)) 
+       		(semicolon (inverse r) r)
+
+  (* restriction / substraction *)
+  goal inclusion_restriction_1:
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> subset (domain_restriction u r) 
+       		r
+
+  goal inclusion_restriction_2:
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t)
+     /\ subset v t)
+    -> subset (range_restriction r v) 
+       		r
+
+  goal inclusion_substraction_1:
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> subset (domain_substraction u r) 
+       		r
+
+  goal inclusion_substraction_2:
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b). 
+    (mem r (relation s t)
+     /\ subset v t) 
+    -> subset (range_substraction r v) 
+       		r
+
+  (* semicolon *)
+  goal inclusion_semicolon_1: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   r: set ('a, 'b), p q: set ('b, 'c).
+    (mem r (relation s t)
+     /\ mem p (relation t u)
+     /\ mem q (relation t u))
+    -> subset (semicolon r (inter p q))
+       		(inter (semicolon r p) (semicolon r q))
+
+  goal inclusion_semicolon_2: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   r: set ('a, 'b), p q: set ('b, 'c).
+    (mem r (relation s t)
+     /\ mem p (relation t u)
+     /\ mem q (relation t u))
+    -> subset (diff (semicolon r p) (semicolon r q))
+       		(semicolon r (diff p q))
+
+  goal inclusion_semicolon_3:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t)
+     /\ mem r (relation t u))
+    -> subset (semicolon (inter p q) r)
+       		(inter (semicolon p r) (semicolon q r))
+
+  goal inclusion_semicolon_4:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t)
+     /\ mem r (relation t u))
+    -> subset (diff (semicolon p r) (semicolon q r))
+       		(semicolon (diff p q) r)
+
+  (* image *)
+  goal inclusion_image_1: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t)
+     /\ subset u s 
+     /\ subset v s) 
+    -> subset (image r (inter u v))
+       		(inter (image r u) (image r v))
+
+  goal inclusion_image_2: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset u s
+     /\ subset v s)
+    -> subset (diff (image r u) (image r v))
+       		(image r (diff u v))
+
+  (* dom / ran *) 
+  goal inclusion_dom_1: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> subset (dom (inter p q))
+       		(inter (dom p) (dom q))
+
+  goal inclusion_dom_2: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> subset (diff (dom p) (dom q))
+       		(dom (diff p q))
+
+  goal inclusion_ran_1: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> subset (ran (inter p q))
+       		(inter (ran p) (ran q))
+
+  goal inclusion_ran_2: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> subset (diff (ran p) (ran q))
+       		(ran (diff p q))
+
+  (* image 2 *)
+  goal inclusion_image_3: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ subset u s)
+    -> subset (image (inter p q) u)
+       		(inter (image p u) (image q u))
+
+  goal inclusion_image_4:
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t)
+     /\ subset u s) 
+    -> subset (diff (image p u) (image q u))
+       		(image (diff p q) u)
+
+(* ---------- ---------- ---------- *)
+(* ---------- ---------- ---------- *)
+
+(* equality laws / page 99 *)
+
+  (* inverse property *)
+  goal equal_inverse_1: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (inverse (inverse r)) 
+       == r
+
+  goal equal_inverse_2: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t)
+     /\ mem q (relation t u))
+    -> (inverse (semicolon p q)) 
+       == (semicolon (inverse q) (inverse p))
+
+  goal equal_inverse_3: 
+    forall s: set 'a.
+    (inverse (id s)) 
+    == (id s)
+
+  goal equal_inverse_4: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> (inverse (domain_restriction u r)) 
+       == (range_restriction (inverse r) u)
+
+  goal equal_inverse_5: 
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t)
+    -> (inverse (range_restriction r v)) 
+       == (domain_restriction v (inverse r))
+
+  goal equal_inverse_6: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> (inverse (domain_substraction u r)) 
+       == (range_substraction (inverse r) u)
+
+  goal equal_inverse_7: 
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t) 
+    -> (inverse (range_substraction r v)) 
+       == (domain_substraction v (inverse r))
+
+  goal equal_inverse_8: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t))
+    -> (inverse (p <+ q)) 
+       == (union (range_substraction (inverse p) (dom q)) (inverse q)) 
+
+  goal equal_inverse_9: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd, 
+    	   p: set ('a, 'b), q: set ('c, 'd).
+    (mem p (relation s t)
+     /\ mem q (relation u v))
+    -> (inverse (parallel_product p q)) 
+       == (parallel_product (inverse p) (inverse q))
+
+  goal equal_inverse_10: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t))
+    -> (inverse (union p q)) 
+       == (union (inverse p) (inverse q))
+
+  goal equal_inverse_11: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t))
+    -> (inverse (inter p q)) 
+       == (inter (inverse p) (inverse q))
+
+  goal equal_inverse_12: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t))
+    -> (inverse (diff p q)) 
+       == (diff (inverse p) (inverse q))
+
+  goal equal_inverse_13: 
+    forall s: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ mem y t)
+    -> (inverse (singleton (x, y))) 
+       == (singleton (y, x))
+
+  goal equal_inverse_14: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t)
+     /\ r == empty)
+    -> (inverse r) 
+       == empty
+
+  goal equal_inverse_15: 
+    forall s: set 'a, t: set 'b.
+    (inverse (times s t)) 
+    == (times t s)
+
+(* ---------- ---------- ---------- *)
+
+  (* domain property *)
+  goal equal_domain_1: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b).
+    mem f (s --> t) 
+    -> (dom f) 
+       == s
+
+  goal equal_domain_2: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (dom (inverse r)) 
+       == (ran r)
+
+  goal equal_domain_3: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t u))	
+    -> (dom (semicolon p q)) 
+       == (image (inverse p) (dom q))
+
+  goal equal_domain_4: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t u) 
+     /\ subset (ran p) (dom q))
+    -> (dom (semicolon p q)) 
+       == (dom p)
+
+  goal equal_domain_5: 
+    forall s: set 'a.
+    (dom (id s)) 
+    == s
+
+  goal equal_domain_6: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> (dom (domain_restriction u r)) 
+       == (inter u (dom r))
+
+  goal equal_domain_7: 
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t)
+    -> (dom (range_restriction r v)) 
+       == (image (inverse r) v)
+
+  goal equal_domain_8: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t)) 
+    -> (dom (domain_substraction u r)) 
+       == (diff (dom r) u)
+
+  goal equal_domain_9: 
+    forall s: set 'a, t v: set 'b, 
+    	   f: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ subset v t)
+    -> (dom (range_substraction f v)) 
+       == (diff (dom f) (image (inverse f) v))
+
+  goal equal_domain_10:
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> (dom (p <+ q)) 
+       == (union (dom p) (dom q))
+
+  goal equal_domain_11: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('a, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s u))
+    -> (dom (direct_product p q)) 
+       == (inter (dom p) (dom q))
+
+  goal equal_domain_12: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd, 
+    	   p: set ('a, 'b), q: set ('c, 'd).
+    (mem p (relation s t) 
+     /\ mem q (relation u v)) 
+    -> (dom (parallel_product p q)) 
+       == (times (dom p) (dom q))
+
+  goal equal_domain_13: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t))
+    -> (dom (union p q)) 
+       == (union (dom p) (dom q))
+
+  goal equal_domain_14: 
+    forall s: set 'a, t: set 'b, 
+    	   f g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s +-> t)
+     /\ (domain_restriction (dom f) g) 
+     	== (domain_restriction (dom g) f))
+    -> (dom (inter f g)) 
+       == (inter (dom f) (dom g))
+
+  goal equal_domain_15: 
+    forall s: set 'a, t: set 'b, 
+    	   f g: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ mem g (s +-> t) 
+     /\ (domain_restriction (dom f) g) 
+     	== (domain_restriction (dom g) f))
+    -> (dom (diff f g)) 
+       == (diff (dom f) (dom g))
+
+  goal equal_domain_16: 
+    forall s: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ mem y t) 
+    -> (dom (singleton (x, y))) 
+       == (singleton x)
+
+  goal equal_domain_17: 
+    forall s: set 'a, t: set 'b,
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ r == empty)
+    -> (dom r) 
+       == empty
+
+  goal equal_domain_18: 
+    forall s: set 'a, t: set 'b. 
+    not (t == empty)
+    -> (dom (times s t)) 
+       == s
+
+(* ---------- ---------- ---------- *)
+
+  (* range property *)
+  goal equal_range_1: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b).
+    mem f (s +->> t)
+    -> (ran f) 
+       == t
+
+  goal equal_range_2: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (ran (inverse r)) 
+       == (dom r)
+
+  goal equal_range_3: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t u)) 
+    -> (ran (semicolon p q)) 
+       == (image q (ran p))
+
+  goal equal_range_4: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t u)
+     /\ subset (dom q) (ran p))
+    -> (ran (semicolon p q)) 
+       == (ran q)
+
+  goal equal_range_5: 
+    forall s: set 'a.
+    (ran (id s)) 
+    == s
+
+  goal equal_range_6: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t))
+    -> (ran (domain_restriction u r)) 
+       == (image r u)
+
+  goal equal_range_7: 
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t)
+     /\ subset v t)
+    -> (ran (range_restriction r v)) 
+       == (inter (ran r) v)
+
+  goal equal_range_8: 	       
+    forall s u: set 'a, t: set 'b,	
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem (inverse r) (t +-> s))
+    -> (ran (domain_substraction u r)) 
+       == (diff (ran r) (image r u))
+
+  goal equal_range_9: 
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t)
+    -> (ran (range_substraction r v)) 
+       == (diff (ran r) v)
+
+  goal equal_range_10: 
+    forall s: set 'a, t: set 'b,
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> (ran (p <+ q)) 
+       == (union (ran (domain_substraction (dom q) p)) (ran q))
+
+  goal equal_range_11:
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('a, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s u)) 
+    -> (ran (direct_product p q)) 
+       == (semicolon (inverse p) q)
+
+  goal equal_range_12: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd,
+    	   p: set ('a, 'b), q: set ('c, 'd).
+    (mem p (relation s t) 
+     /\ mem q (relation u v))
+    -> (ran (parallel_product p q)) 
+       == (times (ran p) (ran q))
+
+  goal equal_range_13: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t)) 
+    -> (ran (union p q)) 
+       == (union (ran p) (ran q))
+
+  goal equal_range_14: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem (inverse p) (t +-> s) 
+     /\ mem (inverse q) (t +-> s) 
+     /\ (range_restriction q (ran p)) 
+     	== (range_restriction p (ran q)))
+    -> (ran (inter p q)) 
+       == (inter (ran p) (ran q))
+
+  goal equal_range_15: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem (inverse p) (t +-> s) 
+     /\ mem (inverse q) (t +-> s) 
+     /\ (range_restriction q (ran p)) 
+     	== (range_restriction p (ran q)))
+    -> (ran (diff p q)) 
+       == (diff (ran p) (ran q))
+
+  goal equal_range_16: 
+    forall s: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ mem y t) 
+    -> (ran (singleton (x, y))) 
+       == (singleton y)
+
+  goal equal_range_17: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ r == empty) 
+    -> (ran r) 
+       == empty
+
+  goal equal_range_18: 
+    forall s: set 'a, t: set 'b.
+    not (s == empty) 
+    -> (ran (times s t)) 
+       == t
+
+(* ---------- ---------- ---------- *)
+
+  (* semicolon property *)
+  goal equal_semicolon_1: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p q: set ('b, 'c), r: set ('a, 'b).
+    (mem p (relation t u) 
+     /\ mem q (relation t u) 
+     /\ mem r (s +->> t) 
+     /\ (semicolon r p) 
+     	== (semicolon r q)) 
+    -> p == q
+
+  goal equal_semicolon_2: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ mem (inverse r) (u +->> t) 
+     /\ (semicolon p r) 
+     	== (semicolon q r)) 
+    -> p == q
+
+  goal equal_semicolon_3: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd, 
+    	   p: set ('b, 'c), q: set ('c, 'd), r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ mem p (relation t u) 
+     /\ mem q (relation u v))
+    -> (semicolon r (semicolon p q)) 
+       == (semicolon (semicolon r p) q)
+
+  goal equal_semicolon_4: 
+    forall s: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t)
+    -> (semicolon r (id v)) 
+       == (range_restriction r v)
+
+  goal equal_semicolon_5:
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> (semicolon r (id t)) 
+       == r
+
+  goal equal_semicolon_6: 
+    forall s: set 'a, t v: set 'b, u: set 'c,
+    	   r: set ('a, 'b), p: set ('b, 'c).
+    (mem r (relation s t) 
+     /\ subset v t 
+     /\ mem p (relation t u)) 
+    -> (semicolon r (domain_restriction v p)) 
+       == (semicolon (range_restriction r v) p)
+
+  goal equal_semicolon_7: 
+    forall s: set 'a, t: set 'b, u w: set 'c, 
+    	   r: set ('a, 'b), p: set ('b, 'c).
+    (mem r (relation s t) 
+     /\ mem p (relation t u) 
+     /\ subset w u) 
+    -> (semicolon r (range_restriction p w)) 
+       == (range_restriction (semicolon r p) w)
+
+  goal equal_semicolon_8: 
+    forall s: set 'a, t v: set 'b, u: set 'c, 
+    	   r: set ('a, 'b), p: set ('b, 'c).
+    (mem r (relation s t) 
+     /\ subset  v t 
+     /\ mem p (relation t u)) 
+    -> (semicolon r (domain_substraction v p)) 
+       == (semicolon (range_substraction r v) p)
+
+  goal equal_semicolon_9: 
+    forall s: set 'a, t: set 'b, u w: set 'c, 
+    	   r: set ('a, 'b), p: set ('b, 'c).
+    (mem r (relation s t) 
+     /\ mem p (relation t u) 
+     /\ subset w u) 
+    -> (semicolon r (range_substraction p w)) 
+       == (range_substraction (semicolon r p) w)
+
+  goal equal_semicolon_10: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+     	   f: set ('a, 'b), p: set ('b, 'c), q: set ('b, 'c). 
+    (mem f (s +-> t) 
+     /\ mem p (relation t u) 
+     /\ mem q (relation t u)) 
+    -> (semicolon f (p <+ q)) 
+       == ((semicolon f p) <+ (semicolon f q))
+
+  goal equal_semicolon_11: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+     	   r: set ('a, 'b), p: set ('b, 'c), q: set ('b, 'c). 
+    (mem r (relation s t) 
+     /\ mem p (relation t u) 
+     /\ mem q (relation t u)) 
+    -> (semicolon r (union p q)) 
+       == (union (semicolon r p) (semicolon r q))
+
+  goal equal_semicolon_12: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+     	   f: set ('a, 'b), p: set ('b, 'c), q: set ('b, 'c). 
+    (mem f (s +-> t) 
+     /\ mem p (relation t u) 
+     /\ mem q (relation t u)) 
+    -> (semicolon f (inter p q)) 
+       == (inter (semicolon f p) (semicolon f q))
+
+  goal equal_semicolon_13: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+     	   f: set ('a, 'b), p: set ('b, 'c), q: set ('b, 'c). 
+    (mem f (s +-> t) 
+     /\ mem p (relation t u) 
+     /\ mem q (relation t u)) 
+    -> (semicolon f (diff p q)) 
+       == (diff (semicolon f p) (semicolon f q))
+ 
+  (* coquille : x E t!!! *)
+  goal equal_semicolon_14: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   r: set ('a, 'b), 
+	   x: 'b, y: 'c.
+    (mem r (relation s t) 
+     /\ mem x t
+     /\ mem y u) 
+    -> (semicolon r (singleton (x, y))) 
+       == (times (image (inverse r) (singleton x)) (singleton y))
+
+  goal equal_semicolon_15: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   r: set ('a, 'b), p: set ('b, 'c). 
+    (mem r (relation s t) 
+     /\ mem p (relation t u) 
+     /\ p == empty)
+    -> (semicolon r p) 
+       == empty
+
+  goal equal_semicolon_16: 
+    forall s: set 'a, t u: set 'b, v: set 'c,
+    	   r: set ('a, 'b). 
+    (mem r (relation s t) 
+     /\ subset u t) 
+    -> (semicolon r (times u v)) 
+       == (times (image (inverse r) u) v)
+
+  goal equal_semicolon_17: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd, 
+    	   f: set ('a, 'b), p: set ('b, 'c), q: set ('b, 'd).
+    (mem f (s +-> t) 
+     /\ mem p (relation t u) 
+     /\ mem q (relation t v))
+    -> (semicolon f (direct_product p q)) 
+       == (direct_product (semicolon f p) (semicolon f q))
+
+  goal equal_semicolon_18: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t)) 
+    -> (semicolon (id u) r) 
+       == (domain_restriction u r)
+
+  goal equal_semicolon_19: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (semicolon (id s) r) 
+       == r
+
+  (* je suspect r E t <-> v *)
+  goal equal_semicolon_20: 
+    forall s u: set 'a, t: set 'b,
+     	   p: set ('a, 'b), r: set ('b, 'a).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem r (relation t u))
+    -> (semicolon (domain_restriction u p) r) 
+       == (domain_restriction u (semicolon p r))
+
+  goal equal_semicolon_21: 
+    forall s: set 'a, t v: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ subset v t 
+     /\ mem r (relation t u))
+    -> (semicolon (range_restriction p v) r) 
+       == (semicolon p (domain_restriction v r))
+
+  (* je suspect r E t <-> v *)
+  goal equal_semicolon_22: 
+    forall s u: set 'a, t: set 'b, 
+    	   p: set ('a, 'b), r: set ('b, 'a).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem r (relation t u))
+    -> (semicolon (domain_substraction u p) r) 
+       == (domain_substraction u (semicolon p r))
+
+  goal equal_semicolon_23: 
+    forall s: set 'a, t v: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ subset v t 
+     /\ mem r (relation t u))
+    -> (semicolon (range_substraction p v) r) 
+       == (semicolon p (domain_substraction v r))
+
+  goal equal_semicolon_24: 
+    forall s: set 'a, t: set 'b, u: set 'c,
+    	   p: set ('a, 'b), q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ mem r (relation t u)
+     /\ subset (ran q) (dom r))
+    -> (semicolon (p <+ q) r) 
+       == ((semicolon p r) <+ (semicolon q r))
+
+  goal equal_semicolon_25: 
+    forall s: set 'a, t: set 'b, u: set 'c,
+    	   p: set ('a, 'b), q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ mem r (relation t u))
+    -> (semicolon (union p q) r) 
+       == (union (semicolon p r) (semicolon q r))
+
+  goal equal_semicolon_26: 
+    forall s: set 'a, t: set 'b, u: set 'c,
+    	   p: set ('a, 'b), q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ mem (inverse r) (u +-> t))
+    -> (semicolon (inter p q) r) 
+       == (inter (semicolon p r) (semicolon q r))
+
+  goal equal_semicolon_27: 
+    forall s: set 'a, t: set 'b, u: set 'c,
+    	   p: set ('a, 'b), q: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ mem (inverse r) (u +-> t))
+    -> (semicolon (diff p q) r) 
+       == (diff (semicolon p r) (semicolon q r))
+
+  goal equal_semicolon_28: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   x: 'a, y: 'b, 
+	   r: set ('b, 'c).
+    (mem x s 
+     /\ mem y t 
+     /\ mem r (relation t u))
+    -> (semicolon (singleton (x, y)) r) 
+       == (times (singleton x) (image r (singleton y)))
+
+  goal equal_semicolon_29: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), r: set ('b, 'c).
+    (mem p (relation s t)
+     /\ mem r (relation t u) 
+     /\ p ==  empty)
+    -> (semicolon p r) 
+       == empty 
+
+  goal equal_semicolon_30: 
+    forall s v: set 'a, t: set 'b, u: set 'c,
+    	   r: set ('a, 'b).
+    (subset v s 
+     /\ mem r (relation s t)) 
+    -> (semicolon (times u v) r) 
+       == (times u (image r v))
+
+  goal equal_semicolon_31: 
+    forall s: set 'a, t: set 'b, 
+    	   f: set ('a, 'b).
+    mem f (s +-> t) 
+    -> (semicolon (inverse f) f) 
+       == (id (ran f))
+
+  goal equal_semicolon_32: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem (inverse r) (t +-> s)
+    -> (semicolon r (inverse r)) 
+       == (id (dom r))
+
+  goal equal_semicolon_33: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s) 
+    -> (semicolon (id u) (id v)) 
+       == (id (inter u v))
+
+  goal equal_semicolon_34: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd, w: set 'e, z: set 'f, 
+    	   p: set ('a, 'b), q: set ('c, 'd), h: set ('b, 'e), k: set ('d, 'f).
+    (mem p (relation s t) 
+     /\ mem q (relation u v) 
+     /\ mem h (relation t w) 
+     /\ mem k (relation v z))
+    -> (semicolon (parallel_product p q) (parallel_product h k)) 
+       == (parallel_product (semicolon p h) (semicolon q k))
+
+  goal equal_semicolon_35: 
+    forall s: set 'a, t: set 'b, u: set 'c, v: set 'd, w: set 'e, 
+    	   p: set ('a, 'b), q: set ('a, 'c), h: set ('b, 'd), k: set ('c, 'e).
+    (mem p (relation s t) 
+     /\ mem q (relation s u) 
+     /\ mem h (relation t v) 
+     /\ mem k (relation u w))
+    -> (semicolon (direct_product p q) (parallel_product h k)) 
+       == (direct_product (semicolon p h) (semicolon q k))
+
+(* ---------- ---------- ---------- *)
+
+  (* identity property *)
+  goal equal_identity_1: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s) 
+    -> (id (union u v)) 
+       == (union (id u) (id v))
+
+  goal equal_identity_2: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s) 
+    -> (id (inter u v)) 
+       == (inter (id u) (id v))
+
+  goal equal_identity_3: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s) 
+    -> (id (diff u v)) 
+       == (diff (id u) (id v))
+
+  goal equal_identity_4: 
+    forall s: set 'a, x: 'a.
+    mem x s 
+    -> (id (singleton x)) 
+       == (singleton (x, x))
+
+  goal equal_identity_5: 
+    forall s u: set 'a.
+    (subset u s 
+     /\ u == empty)
+    -> (id u) 
+       == empty
+
+(* ---------- ---------- ---------- *)
+
+  (* restriction property *)
+  goal equal_restriction_1: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t)
+     /\ subset (dom r) u) 
+    -> (domain_restriction u r) 
+       == r
+
+  goal equal_restriction_2: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem (inverse r) (t +-> s))
+    -> (domain_restriction u r) 
+       == (range_restriction r (image r u))
+
+  goal equal_restriction_3: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b), p: set ('b, 'a).
+    (subset u s 
+     /\ mem r (relation s t)
+     /\ mem p (relation t u))
+    -> (domain_restriction u (semicolon r p)) 
+       == (semicolon (domain_restriction u r) p)
+
+  goal equal_restriction_4: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s) 
+    -> (domain_restriction u (id v)) 
+       == (id (inter u v))
+
+  goal equal_restriction_5: 
+    forall s u v: set 'a, t: set 'b,
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s 
+     /\ mem r (relation s t))
+    -> (domain_restriction u (domain_restriction v r)) 
+       == (domain_restriction (inter u v) r)
+
+  goal equal_restriction_6: 
+    forall s u: set 'a, t w: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t) 
+     /\ subset w t) 
+    -> (domain_restriction u (range_restriction r w)) 
+       == (range_restriction (domain_restriction u r) w)
+
+  goal equal_restriction_7: 
+    forall s u v: set 'a, t: set 'b,
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s 
+     /\ mem r (relation s t))
+    -> (domain_restriction u (domain_substraction v r)) 
+       == (domain_restriction (diff u v) r)
+
+  goal equal_restriction_8: 
+    forall s u: set 'a, t w: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t) 
+     /\ subset w t) 
+    -> (domain_restriction u (range_substraction r w)) 
+       == (range_substraction (domain_restriction u r) w)
+
+  goal equal_restriction_9: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t)) 
+    -> (domain_restriction u (p <+ q)) 
+       == ((domain_restriction u p) <+ (domain_restriction u q))
+
+  goal equal_restriction_10: 
+    forall s u: set 'a, t: set 'b, v: set 'c,
+    	   p: set ('a, 'b), q: set ('a, 'c).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s v)) 
+    -> (domain_restriction u (direct_product p q)) 
+       == (direct_product (domain_restriction u p) (domain_restriction u q))
+
+  goal equal_restriction_11: 
+    forall s u: set 'a, t v: set 'b, w: set 'c, z: set 'd, 
+    	   p: set ('a, 'c), q: set ('b, 'd).
+    (subset u s 
+     /\ subset v t 
+     /\ mem p (relation s w) 
+     /\ mem q (relation t z))
+    -> (domain_restriction (times u v ) (parallel_product p q)) 
+       == (parallel_product (domain_restriction u p)
+		 	   (domain_restriction v q))
+
+  goal equal_restriction_12: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> (domain_restriction u (union p q)) 
+       == (union (domain_restriction u p) (domain_restriction u q))
+
+  goal equal_restriction_13: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> (domain_restriction u (inter p q)) 
+       == (inter (domain_restriction u p) (domain_restriction u q))
+
+  goal equal_restriction_14: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> (domain_restriction u (diff p q)) 
+       == (diff (domain_restriction u p) q)
+
+  goal equal_restriction_15: 
+    forall s u: set 'a, t: set 'b,
+    	   x: 'a, y: 'b.
+    (subset u s 
+     /\ mem x s 
+     /\ mem y t 
+     /\ mem x u)
+    -> (domain_restriction u (singleton (x, y))) 
+       == (singleton (x, y))
+
+  goal equal_restriction_16: 
+    forall s u: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (subset u s 
+     /\ mem x s 
+     /\ mem y t 
+     /\ not (mem x u))
+    -> (domain_restriction u (singleton (x, y))) 
+       == empty
+
+  goal equal_restriction_17: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t) 
+     /\ (inter (dom r) u) == empty) 
+    -> (domain_restriction u r) 
+       == empty
+
+  goal equal_restriction_18: 
+    forall s u v: set 'a, t: set 'b.
+    (subset u s 
+     /\ subset v s)
+    -> (domain_restriction u (times v t)) 
+       == (times (inter u v) t)
+
+  goal equal_restriction_19: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s 
+     /\ mem r (relation s t)) 
+    -> (domain_restriction (union u v) r) 
+       == (union (domain_restriction u r) (domain_restriction v r))
+
+  goal equal_restriction_20: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s 
+     /\ mem r (relation s t)) 
+    -> (domain_restriction (inter u v) r) 
+       == (inter (domain_restriction u r) (domain_restriction v r))
+
+  goal equal_restriction_21: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s 
+     /\ mem r (relation s t)) 
+    -> (domain_restriction (diff u v) r) 
+       == (diff (domain_restriction u r) (domain_restriction v r))
+
+  goal equal_restriction_22: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (domain_restriction (dom r) r) 
+       == r
+
+  goal equal_restriction_23:
+    forall s: set 'a, t v: set 'b, 
+    	   f: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ subset v t) 
+    -> (domain_restriction (image (inverse f) v) f) 
+       == (range_restriction f v)
+
+  goal equal_restriction_24:
+    forall s: set 'a, t: set 'b, 
+    	   x: 'a,
+	   r: set ('a, 'b).
+    (mem x s 
+     /\ mem r (relation s t))
+    -> (domain_restriction (singleton x) r) 
+       == (times (singleton x) (image r (singleton x)))
+
+  goal equal_restriction_25:
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> (domain_restriction empty r) 
+       == empty
+
+(* ---------- ---------- ---------- *)
+
+  (* substraction property *)
+  goal equal_substraction_1: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t)
+     /\ (inter (dom r) u) 
+     	== empty)
+    -> (domain_substraction u r) 
+       == r
+
+  goal equal_substraction_2: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem (inverse r) (t +-> s))
+    -> (domain_substraction u r) 
+       == (range_substraction r (image r u))
+
+  goal equal_substraction_3: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b), p: set ('b, 'a).
+    (subset u s 
+     /\ mem r (relation s t)
+     /\ mem p (relation t u))
+    -> (domain_substraction u (semicolon r p)) 
+       == (semicolon (domain_substraction u r) p)
+
+  goal equal_substraction_4: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s)
+    -> (domain_substraction u (id v)) 
+       == (id (diff v u))
+
+  goal equal_substraction_5: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s
+     /\ mem r (relation s t))
+    -> (domain_substraction u (domain_restriction v r)) 
+       == (domain_restriction (diff v u) r)
+
+  goal equal_substraction_6: 
+    forall s u: set 'a, t w: set 'b,
+    	   r: set ('a, 'b).
+    (subset u s  
+     /\ mem r (relation s t) 
+     /\ subset w t) 
+    -> (domain_substraction u (range_restriction r w)) 
+       == (range_restriction (domain_substraction u r) w)
+
+  goal equal_substraction_7: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ subset v s 
+     /\ mem r (relation s t))
+    -> (domain_substraction u (domain_substraction v r)) 
+       == (domain_substraction (union u v) r)
+
+  goal equal_substraction_8: 
+    forall s u: set 'a, t w: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t) 
+     /\ subset w t)
+    -> (domain_substraction u (range_substraction r w)) 
+       == (range_substraction (domain_substraction u r) w)
+
+  goal equal_substraction_9: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t))
+    -> (domain_substraction u (p <+ q)) 
+       == ((domain_substraction u p) <+ (domain_substraction u q))
+
+  goal equal_substraction_10: 
+    forall s u: set 'a, t: set 'b, v: set 'c,
+    	   p: set ('a, 'b), q: set ('a, 'c).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s v))
+    -> (direct_product (domain_substraction u p) (domain_substraction u q)) 
+       == (domain_substraction u (direct_product p q))
+  
+  goal equal_substraction_13: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t)) 
+    -> (domain_substraction u (union p q)) 
+       == (union (domain_substraction u p) (domain_substraction u q))
+
+  goal equal_substraction_14: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t)) 
+    -> (domain_substraction u (inter p q)) 
+       == (inter (domain_substraction u p) (domain_substraction u q))
+
+  goal equal_substraction_15: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (subset u s 
+     /\ mem p (relation s t) 
+     /\ mem q (relation s t)) 
+    -> (domain_substraction u (diff p q)) 
+       == (diff (domain_substraction u p) q)
+
+  goal equal_substraction_16: 
+    forall s u: set 'a, t: set 'b,
+    	   x: 'a, y: 'b.
+    (subset u s 
+     /\ mem x s 
+     /\ mem y t 
+     /\ not (mem x u))
+    -> (domain_substraction u (singleton (x, y))) 
+       == (singleton (x, y))
+
+  goal equal_substraction_17: 
+    forall s u: set 'a, t: set 'b,
+    	   x: 'a, y: 'b.
+    (subset u s 
+     /\ mem x s 
+     /\ mem y t 
+     /\ mem x u)
+    -> (domain_substraction u (singleton (x, y))) 
+       == empty
+
+  goal equal_substraction_18: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t)
+     /\ subset (dom r) u)
+    -> (domain_substraction u r) 
+       ==  empty
+
+  goal equal_substraction_19: 
+    forall s u v: set 'a, t: set 'b.
+    (subset u s 
+     /\ subset v s) 
+    -> (domain_substraction u (times v t)) 
+       == (times (diff v u) t)
+
+  goal equal_substraction_20: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s
+     /\ subset v s 
+     /\ mem r (relation s t))
+    -> (domain_substraction (union u v) r) 
+       == (inter (domain_substraction u r) (domain_substraction v r))
+
+  goal equal_substraction_21: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s
+     /\ subset v s 
+     /\ mem r (relation s t))
+    -> (domain_substraction (inter u v) r) 
+       == (union (domain_substraction u r) (domain_substraction v r))
+
+  goal equal_substraction_22: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s
+     /\ subset v s 
+     /\ mem r (relation s t))
+    -> (domain_substraction (diff u v) r) 
+       == (union (domain_substraction u r) (domain_restriction v r))
+
+  goal equal_substraction_23: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> (domain_substraction (dom r) r) 
+       == empty
+
+  goal equal_substraction_24: 
+    forall s: set 'a, t v: set 'b, 
+    	   f: set ('a, 'b).
+    (mem f (s +-> t) 
+     /\ subset v t)
+    -> (domain_substraction (image (inverse f) v) f) 
+       == (range_substraction f v)
+
+  goal equal_substraction_25:
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (domain_substraction empty r) 
+       == r
+
+(* ---------- ---------- ---------- *)
+
+  (* image property *)
+  goal equal_image_1: 
+    forall s u: set 'a, t: set 'b, v: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t v)
+     /\ subset u s)
+    -> (image (semicolon p q) u) 
+       == (image q (image p u))
+
+  goal equal_image_2: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem (inverse r) (t +-> s)
+     /\ subset u (dom r))
+    -> (image (semicolon r (inverse r)) u) 
+       == u
+
+  goal equal_image_3: 
+    forall s u v: set 'a.
+    (subset u s 
+     /\ subset v s) 
+    -> (image (id u) v) 
+       == (inter u v)
+
+  goal equal_image_4: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t)
+     /\ subset v s) 
+    -> (image (domain_restriction u r) v) 
+       == (image r (inter u v))
+
+  goal equal_image_5: 
+    forall s u: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t
+     /\ subset u s)
+    -> (image (range_restriction r v) u) 
+       == (inter (image r u) v)
+
+  goal equal_image_6: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (subset u s 
+     /\ mem r (relation s t) 
+     /\ subset v s)
+    -> (image (domain_substraction u r) v) 
+       == (image r (diff u v))
+
+  goal equal_image_7: 
+    forall s u: set 'a, t v: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t) 
+     /\ subset v t 
+     /\ subset u s) 
+    -> (image (range_substraction r v) u) 
+       == (diff (image r u) v)
+
+  goal equal_image_8: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t)
+     /\ subset u s) 
+    -> (image (p <+ q) u) 
+       == (union (image (domain_substraction (dom q) p) u) (image q u))
+
+  goal equal_image_9: 
+    forall s u: set 'a, t: set 'b, v: set 'c, 
+    	   p: set ('a, 'b), q: set ('a, 'c).
+    (mem p (relation s t)
+     /\ mem q (relation s v)
+     /\ subset u s) 
+    -> (image (direct_product p q) u) 
+       == (semicolon (inverse p) (domain_restriction u q))
+
+  goal equal_image_10: 
+    forall s u: set 'a, t: set 'b, w v: set 'c, z: set 'd,
+    	   p: set ('a, 'b), q: set ('c, 'd).
+    (mem p (relation s t)
+     /\ mem q (relation w z)
+     /\ subset u s 
+     /\ subset v w)
+    -> (image (parallel_product p q) (times u v)) 
+       == (times (image p u) (image q v))
+
+  goal equal_image_11: 
+    forall s: set 'a, t: set 'b, u: set 'c, 
+    	   p: set ('a, 'b), q: set ('b, 'c).
+    (mem p (relation s t) 
+     /\ mem q (relation t u))
+    -> (image (parallel_product (id s) q) p) 
+       == (semicolon p q)
+
+  (* rajout subset u s *)
+  goal equal_image_12: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t)
+     /\ mem q (relation s t)
+     /\ subset u s)
+    -> (image (union p q) u) 
+       == (union (image p u) (image q u))
+
+  goal equal_image_13: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem (inverse p) (t +-> s)
+     /\ mem (inverse q) (t +-> s)
+     /\ subset u s
+     /\ (range_restriction p (ran q)) 
+     	== (range_restriction q (ran p)))
+    -> (image (inter p q) u) 
+       == (inter (image p u) (image q u))
+
+  goal equal_image_14: 
+    forall s u: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem (inverse p) (t +-> s)
+     /\ mem (inverse q) (t +-> s)
+     /\ subset u s
+     /\ (range_restriction p (ran q)) 
+     	== (range_restriction q (ran p)))
+    -> (image (diff p q) u) 
+       == (diff (image p u) (image q u))
+
+  goal equal_image_15: 
+    forall s u: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ mem y t 
+     /\ subset u s 
+     /\ mem x u)
+    -> (image (singleton (x, y)) u) 
+       == (singleton y)
+
+  goal equal_image_16: 
+    forall s u: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ mem y t 
+     /\ subset u s 
+     /\ not (mem x u))
+    -> (image (singleton (x, y)) u) 
+       == empty
+
+  goal equal_image_17: 
+    forall s u: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t)
+     /\ (inter (dom r) u) 
+     	== empty)
+    -> (image r u) 
+       == empty
+
+  goal equal_image_18: 
+    forall s u v: set 'a, t: set 'b.
+    (subset u s 
+     /\ subset v s 
+     /\ not ((inter u v) 
+     	== empty))
+    -> (image (times u t) v) 
+       == t
+
+  goal equal_image_19: 
+    forall s u v: set 'a, t: set 'b.
+    (subset u s 
+     /\ subset v s 
+     /\ (inter u v) 
+     	== empty)
+    -> (image (times u t) v) 
+       == empty
+
+  goal equal_image_20: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem r (relation s t)
+     /\ subset u s
+     /\ subset v s)
+    -> (image r (union u v)) 
+       == (union (image r u) (image r v))
+
+  goal equal_image_21: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem (inverse r) (t +-> s)
+     /\ subset u s
+     /\ subset v s)
+    -> (image r (inter u v)) 
+       == (inter (image r u) (image r v))
+
+  goal equal_image_22: 
+    forall s u v: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    (mem (inverse r) (t +-> s)
+     /\ subset u s
+     /\ subset v s)
+    -> (image r (diff u v)) 
+       == (diff (image r u) (image r v))
+
+  goal equal_image_24: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> (image r empty) 
+       == empty
+
+  goal equal_image_25: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> (image r (dom r)) 
+       == (ran r)
+
+  goal equal_image_26: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t)
+    -> (image (inverse r) (ran r)) 
+       == (dom r)
+
+(* ---------- ---------- ---------- *)
+
+  (* overriding property *)
+  goal equal_overriding_1: 
+    forall s: set 'a, t: set 'b, 
+    	   p q r: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t) 
+     /\ mem r (relation s t))
+    -> (p <+ (q <+ r)) 
+       == ((p <+ q) <+ r)
+
+  goal equal_overriding_2: 
+    forall s: set 'a, t: set 'b, 
+    	   p q: set ('a, 'b).
+    (mem p (relation s t) 
+     /\ mem q (relation s t)
+     /\ (domain_restriction (dom q) p) 
+     	== (domain_restriction (dom p) q))
+    -> (p <+ q) 
+       == (union p q)
+
+  goal equal_overriding_3: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (empty <+ r) 
+       == r
+
+  goal equal_overriding_4: 
+    forall s: set 'a, t: set 'b, 
+    	   r: set ('a, 'b).
+    mem r (relation s t) 
+    -> (r <+ empty) 
+       == r
+
+  goal equal_overriding_5: 
+    forall s: set 'a, t v: set 'b, 
+    	   x: 'a, y: 'b.
+    (mem x s 
+     /\ subset v t 
+     /\ mem y t)
+    -> ((times (singleton x) v) <+ (singleton (x, y))) 
+       == (singleton (x, y))
+
+  goal equal_overriding_6: 
+    forall s u: set 'a, t: set 'b, 
+    	   x: 'a, y: 'b.
+    (subset u s 
+     /\ mem y t 
+     /\ mem x s) 
+    -> ((times u (singleton y)) <+ (singleton (x, y))) 
+       == (times (union u (singleton x)) (singleton y))
+
+(* ---------- ---------- ---------- *)
+
+
+(* ---------- ---------- ---------- *)
+
+
+end
