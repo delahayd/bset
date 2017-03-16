@@ -24,7 +24,7 @@ SBFILES=subset_reflexivity.zf subset_antisymmetry.zf subset_monotonicity_1.zf \
   equal_domain_4.zf equal_domain_5.zf equal_domain_6.zf equal_domain_7.zf equal_domain_8.zf
 
 SBRESFILES=$(SBFILES:%.zf=%.res)
-BFILES=$(shell ls *.zf)
+BFILES=$(shell find \( -name '*.zf' \) -and \( -not -name bset.zf \))
 BRESFILES=$(BFILES:%.zf=%.res)
 
 test: $(SBRESFILES)
