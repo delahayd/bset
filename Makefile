@@ -3,7 +3,7 @@
 ZIPPER=zipperposition
 TIMEOUT=3
 MEMLIMIT=2000
-BFILES=$(shell ls *.zf )
+BFILES=$(shell find \( -name '*.zf' \) -and \( -not -name bset.zf \))
 BRESFILES=$(BFILES:%.zf=%.res)
 
 test: $(BRESFILES)
