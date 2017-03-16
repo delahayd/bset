@@ -37,8 +37,8 @@ clean:
 .SUFFIXES: .zf .res
 
 .zf.res:
-	-@echo "**** Testing file $<: \c"; \
+	-@echo -n "**** Testing file $<: "; \
         $(ZIPPER) --timeout $(TIMEOUT) --mem-limit $(MEMLIMIT) $< > $@; \
         tmp=`cat $@ | grep "% SZS status Theorem"`; \
-        if test -n "$$tmp"; then echo "\033[32mValid\033[39m"; \
-        else echo "\033[31mFail\033[39m"; fi
+        if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
+        else echo -e "\033[31mFail\033[39m"; fi
