@@ -36,7 +36,7 @@ clean:
 
 .SUFFIXES: .zf .res
 
-.zf.res:
+%.res: %.zf bset.zf
 	-@echo -n "**** Testing file $<: "; \
         $(ZIPPER) --timeout $(TIMEOUT) --mem-limit $(MEMLIMIT) $< > $@; \
         tmp=`cat $@ | grep "% SZS status Theorem"`; \
