@@ -25,6 +25,11 @@ val domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b
 val range_restriction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
 val domain_substraction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
 
+val fst : pi a b. tup a b -> a.
+val snd : pi a b. tup a b -> b.
+
+rewrite forall a b (x:a)(y:b). fst (pair _ _ x y) = x.
+rewrite forall a b (x:a)(y:b). snd (pair _ _ x y) = y.
 
 rewrite
   forall (a b : type) (z : tup a b) (S : set a) (T : set b).
@@ -35,10 +40,10 @@ rewrite
   forall (a : type) (b : type) (x : a) (y : b) (S : set a) (T : set b).
     mem (tup a b) (pair a b x y) (times a b S T) <=> mem a x S && mem b y T.
 
-#rewrite
-#  forall a b z S.
-#    mem (tup a b) z S <=> (exists x y. z = (pair a b x y) &&
-#      mem (tup a b) (pair a b x y) S).
+rewrite
+  forall a b z S1 S2.
+    mem (tup a b) z (times _ _ S1 S2) <=>
+      mem a (fst _ _ z) S1 && mem b (snd _ _ z) S2.
 
 rewrite
   forall (a : type) (S T : set a).
