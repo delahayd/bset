@@ -1,0 +1,6 @@
+# equal_domain_16.zf
+
+include "bset.zf".
+
+goal forall (a b :type) (S : set a) (T : set b) (X : a) (Y : b).
+  mem a X S && mem b Y T => dom a b (singleton (tup a b) (tup21 b a X Y)) = singleton a X.

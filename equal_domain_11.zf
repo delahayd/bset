@@ -1,0 +1,6 @@
+# equal_domain_11.zf
+
+include "bset.zf".
+
+goal forall (a b c:type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup a c)).
+  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a c)) Q (relation a c S U) => dom a (tup b c) (direct_product a b c P Q) = inter a (dom a b P) (dom a c Q).

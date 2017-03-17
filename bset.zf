@@ -25,12 +25,17 @@ val domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b
 val range_restriction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
 val domain_substraction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
 val range_substraction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
+val lspl : pi (a b : type). set (tup a b) -> set (tup a b) -> set (tup a b).
+val direct_product : pi (a b c : type). set (tup a b) -> set (tup a c) -> set (tup a (tup b c)).
+val parallel_product : pi (a b c d : type). set (tup a b) ->  set (tup c d) -> set (tup (tup a c) (tup b d)).
+val singleton : pi (a : type). a -> set a.
 
-val fst : pi a b. tup a b -> a.
-val snd : pi a b. tup a b -> b.
 
-rewrite forall a b (x:a)(y:b). fst (pair _ _ x y) = x.
-rewrite forall a b (x:a)(y:b). snd (pair _ _ x y) = y.
+val fst : pi (a b : type). tup a b -> a.
+val snd : pi (a b : type). tup a b -> b.
+
+rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
+rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
 
 rewrite
   forall (a b : type) (z : tup a b) (S : set a) (T : set b).
@@ -143,3 +148,23 @@ rewrite
 rewrite
   forall (a b : type) (P : set (tup a b)) (T: set b) (X : a) (Y: b).
     mem (tup a b) (tup21 b a X Y) (range_substraction a b P T) <=> mem (tup a b) (tup21 b a X Y) P && ~ (mem b Y T).
+
+#lspl
+rewrite
+  forall (a b : type) (P Q : set (tup a b)) (X : a) (Y : b).
+    mem (tup a b) (tup21 b a X Y) (lspl a b Q P) <=> mem (tup a b) (tup21 b a X Y) Q && ~ mem a X (dom a b P) || mem (tup a b) (tup21 b a X Y) P.
+
+#direct_product
+rewrite
+  forall (a b c : type) (F : set (tup a b)) (G : set (tup a c)) (X : a) (Y : b) (Z : c).
+    mem (tup a (tup b c)) (tup21 (tup b c) a X (tup21 c b Y Z)) (direct_product a b c F G) <=> mem (tup a b) (tup21 b a X Y) F && mem (tup a c) (tup21 c a X Z) G.
+
+#parallel_product
+rewrite
+  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (X : a) (Y: c) (Z : b) (W : d).
+    mem (tup (tup a c) (tup b d)) (tup21 (tup b d) (tup a c) (tup21 c a X Y) (tup21 d b Z W)) (parallel_product a b c d H K) <=> mem (tup a b) (tup21 b a X Z) H && mem (tup c d) (tup21 d c Y W) K.
+
+#singleton
+rewrite
+  forall (a : type) (X Y : a).
+    mem a X (singleton a Y) <=> X = Y.

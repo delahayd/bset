@@ -1,0 +1,6 @@
+# equal_domain_17.zf
+
+include "bset.zf".
+
+goal forall (a b :type) (S : set a) (T : set b) (R : set (tup a b)).
+  mem (set (tup a b)) R (relation a b S T) && R = empty (tup a b) => dom a b R = empty a.
