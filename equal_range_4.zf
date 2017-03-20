@@ -1,0 +1,6 @@
+# equal_range_4.zf
+
+include "bset.zf".
+
+goal forall (a b c :type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup b c)).
+  mem (set (tup a b)) P (relation a b S T) && mem (set (tup b c)) Q (relation b c T U) && subset b (dom b c Q) (ran a b P) => ran a c (semicolon a b c P Q) = ran b c Q.

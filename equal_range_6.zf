@@ -1,0 +1,6 @@
+# equal_range_6.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U : set a) (T : set b) (R : set (tup a b)).
+  subset a U S && mem (set (tup a b)) R (relation a b S T) => ran a b (domain_restriction a b U R) = image a b R U.

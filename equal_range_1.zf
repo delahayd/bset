@@ -1,0 +1,6 @@
+# equal_range_1.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (F : set (tup a b)).
+  mem (set (tup a b)) F (plmngtgt a b S T) => ran a b F = T.

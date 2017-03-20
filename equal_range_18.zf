@@ -1,0 +1,6 @@
+# equal_range_18.zf
+
+include "bset.zf".
+
+goal forall (a b: type) (S : set a) (T : set b).
+ ~ (S = empty a) => ran a b (times a b S T) = T.
