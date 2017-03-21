@@ -1,0 +1,6 @@
+#equal_image_2.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U : set a) (T : set b) (R : set (tup a b)).
+  mem (set (tup b a)) (inverse a b R) (plmngt b a T S) && subset a U (dom a b R) => image a a (semicolon a b a R (inverse a b R)) U = U. 

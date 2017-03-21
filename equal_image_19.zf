@@ -1,0 +1,6 @@
+#equal_image_19.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U V : set a) (T :set b).
+  subset a U S && subset a V S && inter a U V = empty a => image a b (times a b U T) V = empty b.

@@ -1,0 +1,6 @@
+#equal_image_14.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U : set a) (T : set b) (P Q : set (tup a b)).
+  mem (set (tup b a)) (inverse a b P) (plmngt b a T S) && mem (set (tup b a)) (inverse a b Q) (plmngt b a T S) && subset a U S && range_restriction a b P (ran a b Q) = range_restriction a b Q (ran a b P) => image a b (diff (tup a b) P Q) U = diff b (image a b P U) (image a b Q U).

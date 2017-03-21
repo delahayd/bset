@@ -1,0 +1,6 @@
+#equal_image_22.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U V : set a) (T :set b) (R : set (tup a b)).
+  mem (set (tup b a)) (inverse a b R) (plmngt b a T S) && subset a U S && subset a V S => image a b R (diff a U V) = diff b (image a b R U) (image a b R V).

@@ -1,0 +1,6 @@
+#equal_image_16.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U : set a) (T :set b) (X : a) (Y : b).
+  mem a X S && mem b Y T && subset a U S && ~ (mem a X U) => image a b (singleton (tup a b) (tup21 b a X Y)) U = empty b.

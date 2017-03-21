@@ -1,0 +1,6 @@
+#equal_image_3.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U V: set a).
+  subset a U S && subset a V S => image a a (id a U) V = inter a U V. 

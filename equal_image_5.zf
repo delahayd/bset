@@ -1,0 +1,6 @@
+#equal_image_5.zf
+
+include "bset.zf".
+
+goal forall (a b: type) (S U : set a) (T V : set b) (R : set (tup a b)).
+  mem (set (tup a b)) R (relation a b S T) && subset b V T && subset a U S => image a b (range_restriction a b R V) U = inter b (image a b R U) V.
