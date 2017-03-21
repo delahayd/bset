@@ -1,0 +1,6 @@
+#equal_overriding_2.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (P Q : set (tup a b)).
+  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) && domain_restriction a b (dom a b Q) P = domain_restriction a b (dom a b P) Q => lspl a b P Q = union (tup a b) P Q.

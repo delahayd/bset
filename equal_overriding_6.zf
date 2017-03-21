@@ -1,0 +1,6 @@
+#equal_overriding_6.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U: set a) (T : set b) (X : a) (Y : b).
+  subset a U S && mem b Y T && mem a X S => lspl a b (times a b U (singleton b Y)) (singleton (tup a b) (tup21 b a X Y)) = times a b (union a U (singleton a X)) (singleton b Y).
