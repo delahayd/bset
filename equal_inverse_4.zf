@@ -1,0 +1,6 @@
+#equal_inverse_4.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (U : set a) (T : set b) (R : set (tup a b)).
+  subset a U S && mem (set (tup a b)) R (relation a b S T) => inverse a b (domain_restriction a b U R) = range_restriction b a (inverse a b R) U.
