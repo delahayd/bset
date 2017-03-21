@@ -1,0 +1,7 @@
+#equal_identity_3.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U V : set a).
+  subset a U S && subset a V S => id a (diff a U V) = diff (tup a a) (id a U) (id a V).
+  

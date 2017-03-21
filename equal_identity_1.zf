@@ -1,0 +1,7 @@
+#equal_identity_1.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U V : set a).
+  subset a U S && subset a V S => id a (union a U V) = union (tup a a) (id a U) (id a V).
+  

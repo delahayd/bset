@@ -1,0 +1,6 @@
+#equal_identity_5.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U : set a).
+  subset a U S && U = empty a => id a U = empty (tup a a).
