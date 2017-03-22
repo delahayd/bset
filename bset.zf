@@ -29,7 +29,7 @@ val lspl : pi (a b : type). set (tup a b) -> set (tup a b) -> set (tup a b).
 val direct_product : pi (a b c : type). set (tup a b) -> set (tup a c) -> set (tup a (tup b c)).
 val parallel_product : pi (a b c d : type). set (tup a b) ->  set (tup c d) -> set (tup (tup a c) (tup b d)).
 val singleton : pi (a : type). a -> set a.
-
+val plmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 
 val fst : pi (a b : type). tup a b -> a.
 val snd : pi (a b : type). tup a b -> b.
@@ -37,17 +37,21 @@ val snd : pi (a b : type). tup a b -> b.
 rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
 rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
 
-rewrite
-  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
-    mem (tup a b) z (times a b S T) <=>
-      (exists (x : a) (y : b). z = (pair a b x y) && mem a x S && mem b y T).
+#tup21 --> pair
+#rewrite
+#  forall (a b : type) (x : a) (y : b). (tup21 a b y x) = (pair b a y x).
+
+#rewrite
+#  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
+#    mem (tup a b) z (times a b S T) <=>
+#      (exists (x : a) (y : b). z = (pair a b x y) && mem a x S && mem b y T).
 
 rewrite
   forall (a : type) (b : type) (x : a) (y : b) (S : set a) (T : set b).
     mem (tup a b) (pair a b x y) (times a b S T) <=> mem a x S && mem b y T.
 
 rewrite
-  forall a b z S1 S2.
+  forall (a b : type) (z : tup a b) (S1 : set a) (S2 : set b).
     mem (tup a b) z (times _ _ S1 S2) <=>
       mem a (fst _ _ z) S1 && mem b (snd _ _ z) S2.
 
@@ -58,9 +62,15 @@ rewrite
 rewrite
   forall (a : type) (S T : set a). subset a S T <=> mem (set a) S (power a T).
 
+# Extensional equality
 rewrite
   forall (a : type) (S T : set a).
     S = T <=> (forall (x : a). (mem a x S) <=> (mem a x T)).
+
+# Equality over tuples
+rewrite
+  forall (a b : type) (x y : tup a b).
+    x = y <=> (fst a b x) = (fst a b y) && (snd a b x) = (snd a b y). 
 
 rewrite
   forall (a : type) (x : a) (S T : set a).
@@ -125,9 +135,17 @@ rewrite
     mem b X (image a b P W) <=> (exists (A1 : a). mem a A1 W && mem (tup a b) (tup21 b a A1 X) P).
 
 #id
+#rewrite
+#  forall (a : type) (U : set a) (X : a) (Y : a).
+#    mem (tup a a) (tup21 a a X Y) (id a U) <=> mem a X U && X = Y.
+
+#rewrite
+#  forall (a : type) (U : set a) (X : a) (Y : a).
+#    mem (tup a a) (pair a a X Y) (id a U) <=> mem a X U && X = Y.
+
 rewrite
-  forall (a : type) (U : set a) (X : a) (Y : a).
-    mem (tup a a) (tup21 a a X Y) (id a U) <=> mem a X U && X = Y.
+  forall (a : type) (U : set a) (z : tup a a).
+    mem (tup a a) z (id a U) <=> mem a (fst a a z) U && (fst a a z) = (snd a a z).
 
 #domain_restriction
 rewrite
@@ -168,3 +186,8 @@ rewrite
 rewrite
   forall (a : type) (X Y : a).
     mem a X (singleton a Y) <=> X = Y.
+
+#plmngtgt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
+    mem (set (tup a b)) X (plmngtgt a b S T) <=> mem (set (tup a b)) X (plmngt a b S T) && ran a b X = T.

@@ -3,4 +3,5 @@
 include "bset.zf".
 
 goal forall (a : type) (S : set a) (X : a).
-  mem a X S => id a (singleton a X) = singleton (tup a a) (tup21 a a X X).
+  mem a X S => id a (singleton a X) = singleton (tup a a) (pair a a X X).
+  
