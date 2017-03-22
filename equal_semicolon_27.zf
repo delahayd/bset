@@ -1,0 +1,6 @@
+# equal_semicolon_27.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (P Q : set (tup a b)) (R : set (tup b c)).
+   mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) && mem (set (tup c b)) (inverse b c R) (plmngt c b U T) => semicolon a b c (diff (tup a b) P Q) R = diff (tup a c) (semicolon a b c P R) (semicolon a b c Q R).

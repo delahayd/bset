@@ -1,0 +1,6 @@
+# equal_semicolon_7.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U W : set c) (R : set (tup a b)) (P : set (tup b c)).
+  mem (set (tup a b)) R (relation a b S T) && mem (set (tup b c)) P (relation b c T U) && subset c W U => semicolon a b c R (range_restriction b c P W) = range_restriction a c (semicolon a b c R P) W.

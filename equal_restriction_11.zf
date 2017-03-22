@@ -1,0 +1,6 @@
+# equal_restriction_11.zf
+
+include "bset.zf".
+
+goal forall (a b c d : type) (S U : set a) (T V: set b) (W : set c) (Z : set d) (P : set (tup a c)) (Q : set (tup b d)).
+  subset a U S && subset b V T && mem (set (tup a c)) P (relation a c S W) && mem (set (tup b d)) Q (relation b d T Z) => domain_restriction (tup a b) (tup c d) (times a b U V) (parallel_product a c b d P Q) = parallel_product a c b d (domain_restriction a c U P) (domain_restriction b d V Q).

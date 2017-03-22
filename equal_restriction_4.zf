@@ -1,0 +1,6 @@
+# equal_restriction_3.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U V : set a).
+ subset a U S && subset a V S => domain_restriction a a U (id a V) = id a (inter a U V).

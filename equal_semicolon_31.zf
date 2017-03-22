@@ -1,0 +1,6 @@
+# equal_semicolon_31.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (F : set (tup a b)).
+  mem (set (tup a b)) F (plmngt a b S T) => semicolon b a b (inverse a b F) F = id b (ran a b F).

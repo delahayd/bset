@@ -1,0 +1,6 @@
+# equal_restriction_18.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U V : set a) (T : set b).
+  subset a U S && subset a V S => domain_restriction a b U (times a b V T) = times a b (inter a U V) T.

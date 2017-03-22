@@ -1,0 +1,6 @@
+# equal_semicolon_14.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (R : set (tup a b)) (X : b) (Y : c).
+  mem (set (tup a b)) R (relation a b S T) && mem b X T && mem c Y U => semicolon a b c R (singleton (tup b c) (tup21 c b X Y)) = times (A, C, (image c a (inverse a b R) (singleton b X)) (singleton c Y)).

@@ -1,0 +1,6 @@
+# equal_restriction_24.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (X : a) (R : set (tup a b)).
+  mem a X S && mem (set (tup a b)) R (relation a b S T) => domain_restriction a b (singleton a X) R = times a b (singleton a X) (image a b R (singleton a X)).

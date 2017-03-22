@@ -1,0 +1,6 @@
+# equal_semicolon_17.zf
+
+include "bset.zf".
+
+goal forall (a b c d: type) (S : set a) (T : set b) (U : set c) (V :set d) (F : set (tup a b)) (P : set (tup b c)) (Q : set (tup b d)).
+  mem (set (tup a b)) F (plmngt a b S T) && mem (set (tup b c)) P (relation b c T U) && mem (set (tup b d)) Q (relation b d T V) => semicolon a b (tup c d) F (direct_product b c d P Q) = direct_product a c d (semicolon a b c F P) (semicolon a b d F Q).

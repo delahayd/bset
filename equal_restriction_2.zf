@@ -1,0 +1,6 @@
+# equal_restriction_2.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U : set a) (T : set b) (R : set (tup a b)).
+ subset a U S && mem (set (tup b a)) (inverse a b R) (plmngt b a T S) => domain_restriction a b U R = range_restriction a b R (image a b R U).

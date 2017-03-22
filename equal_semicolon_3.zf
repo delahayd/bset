@@ -1,0 +1,6 @@
+# equal_semicolon_3.zf
+
+include "bset.zf".
+
+goal forall (a b c d : type) (S : set a) (T : set b) (U : set c) (V : set d) (P : set (tup b c)) (Q : set (tup c d)) (R : set (tup a b)).
+  mem (set (tup a b)) R (relation a b S T) && mem (set (tup b c)) P (relation b c T U) && mem (set (tup c d)) Q (relation c d U V) => semicolon a b d R (semicolon b c d P Q) = semicolon a c d (semicolon a b c R P) Q.

@@ -1,0 +1,6 @@
+# equal_semicolon_33.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U V : set a).
+  subset a U S && subset a V S => semicolon a a a (id a U) (id a V) = id a (inter a U V).

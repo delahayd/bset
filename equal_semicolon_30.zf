@@ -1,0 +1,6 @@
+# equal_semicolon_30.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S V : set a) (T : set b) (U : set c) (R : set (tup a b)).
+  subset a V S && mem (set (tup a b)) R (relation a b S T) => semicolon c a b (times c a U V) R = times c b U (image a b R V).
