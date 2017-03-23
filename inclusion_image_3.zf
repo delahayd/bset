@@ -1,0 +1,6 @@
+# inclusion_image_3.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U : set a) (T : set b) (P Q : set (tup a b)).
+  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) && subset a U S => subset b (image a b (inter (tup a b) P Q) U) (inter b (image a b P U) (image a b Q U)).
