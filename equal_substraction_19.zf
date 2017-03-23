@@ -1,0 +1,6 @@
+# equal_substraction_19.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U V: set a) (T: set b).
+  subset a U S && subset a V S => (domain_substraction a b U (times a b V T) = times a b (diff a V U) T).

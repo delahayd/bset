@@ -1,0 +1,6 @@
+# equal_substraction_4.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U V: set a).
+  subset a U S && subset a V S => (domain_substraction a a U (id a V) = id a (diff a V U)).

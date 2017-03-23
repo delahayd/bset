@@ -1,0 +1,6 @@
+# equal_substraction_5.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U V : set a) (T : set b) (R : set (tup a b)).
+  subset a U S && subset a V S && mem (set (tup a b)) R (relation a b S T) => (domain_substraction a b U (domain_restriction a b V R) = domain_restriction a b (diff a V U) R).

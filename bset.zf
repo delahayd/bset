@@ -30,6 +30,10 @@ val direct_product : pi (a b c : type). set (tup a b) -> set (tup a c) -> set (t
 val parallel_product : pi (a b c d : type). set (tup a b) ->  set (tup c d) -> set (tup (tup a c) (tup b d)).
 val singleton : pi (a : type). a -> set a.
 val plmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val gtmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val gtmngt : pi (a b : type). set a -> set b -> set (set(tup a b)).
+val mnmngtgt : pi (a b : type). set a -> set b -> set (set(tup a b)).
+val gtplgt : pi (a b : type). set a -> set b -> set (set(tup a b)).
 
 val fst : pi (a b : type). tup a b -> a.
 val snd : pi (a b : type). tup a b -> b.
@@ -191,3 +195,23 @@ rewrite
 rewrite
   forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
     mem (set (tup a b)) X (plmngtgt a b S T) <=> mem (set (tup a b)) X (plmngt a b S T) && ran a b X = T.
+
+#gtmngtgt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
+    mem (set (tup a b)) X (gtmngtgt a b S T) <=> mem (set (tup a b)) X (gtmngt a b S T) && mem (set (tup a b)) X (mnmngtgt a b S T).
+
+#gtmngt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
+    mem (set (tup a b)) X (gtmngt a b S T) <=> mem (set (tup a b)) X (gtplgt a b S T) && mem (set (tup a b)) X (mnmngt a b S T).
+
+#mnmngtgt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
+    mem (set (tup a b)) X (mnmngtgt a b S T) <=> mem (set (tup a b)) X (plmngtgt a b S T) && mem (set (tup a b)) X (mnmngt a b S T).
+
+#gtplgt
+rewrite
+  forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
+    mem (set (tup a b)) X (gtplgt a b S T) <=> mem (set (tup a b)) X (plmngt a b S T) && mem (set (tup b a)) (inverse a b X) (plmngt b a T S).
