@@ -1,4 +1,4 @@
-# inclusion_fucntion_2.zf
+# inclusion_function_2.zf
 
 include "bset.zf".
 

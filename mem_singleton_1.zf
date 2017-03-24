@@ -1,0 +1,6 @@
+#mem_singleton_1.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (x : a) (y :b).
+  (mem a x S && mem b y T) => mem (set (tup a b)) (singleton (tup a b) (pair a b x y)) (plmngt a b S T).

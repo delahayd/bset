@@ -1,0 +1,6 @@
+#mem_semicolon_8.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (F : set (tup a b)) (G : set (tup b c)).
+  mem (set (tup a b)) F (gtmngtgt a b S T) && mem (set (tup b c)) G (gtmngtgt b c T U) => mem (set (tup a c)) (semicolon a b c F G) (gtmngtgt a c S U).
