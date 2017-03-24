@@ -1,0 +1,6 @@
+#mem_parallel_product_2.zf
+
+include "bset.zf".
+
+goal forall (a b c d : type) (S : set a) (T : set b) (U : set c) (V : set d) (F : set (tup a b)) (G : set (tup c d)).
+  mem (set (tup a b)) F (plmngt a b S T) && mem (set (tup c d)) G (plmngt c d U V) => mem (set (tup (tup a c) (tup b d))) (parallel_product a b c d F G) (plmngt (tup a c) (tup b d) (times a c S U) (times b d T V)).
