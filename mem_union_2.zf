@@ -1,0 +1,6 @@
+# mem_times_2.zf
+
+include "bset.zf".
+
+goal forall (a b: type) (S : set a) (T : set b) (F G: set (tup a b)).
+  mem (set (tup a b)) F (gtplgt a b S T) && mem (set (tup a b)) G (gtplgt a b S T) && domain_restriction a b (dom a b G) F = domain_restriction a b (dom a b F) G && range_restriction a b F (ran a b G) = range_restriction a b G (ran a b F) => mem (set (tup a b)) (union (tup a b) F G) (gtplgt a b S T) .

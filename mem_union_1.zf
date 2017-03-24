@@ -1,0 +1,6 @@
+# mem_union_1.zf
+
+include "bset.zf".
+
+goal forall (a b: type) (S : set a) (T : set b) (F G : set (tup a b)).
+  mem (set (tup a b)) F (plmngt a b S T) && mem (set (tup a b)) G (plmngt a b S T) && (domain_restriction a b (dom a b G) F) = domain_restriction a b (dom a b F) G => mem (set (tup a b)) (union (tup a b) F G) (plmngt a b S T).
