@@ -1,0 +1,6 @@
+# mem_id_1.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S : set a).
+  mem (set (tup a a)) (id a S) (gtmngtgt a a S S).

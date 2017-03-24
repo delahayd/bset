@@ -1,0 +1,6 @@
+#mem_overriding_3.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (F G: set (tup a b)).
+  mem (set (tup a b)) F (gtplgt a b S T) && mem (set (tup a b)) G (gtplgt a b S T) && (inter b (ran a b F) (ran a b (domain_substraction a b (dom a b G) F)) = empty b) => mem (set (tup a b)) (lspl a b F G) (gtplgt a b S T).

@@ -1,0 +1,6 @@
+#mem_overriding_6.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (F G: set (tup a b)).
+  mem (set (tup a b)) F (mnmngt a b S T) && mem (set (tup a b)) G (plmngt a b S T) => mem (set (tup a b)) (lspl a b F G) (mnmngt a b S T).

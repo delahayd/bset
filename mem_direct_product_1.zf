@@ -1,0 +1,6 @@
+#mem_direct_product_1.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup a c)).
+  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a c)) Q (relation a c S U) => mem (set (tup a (tup b c))) (direct_product a b c P Q) (relation a (tup b c) S (times b c T U)).
