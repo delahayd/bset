@@ -1,0 +1,6 @@
+# monot_direct_product.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (H P: set (tup a b)) (K Q : set (tup a c)).
+  mem (set (tup a b)) H (relation a b S T) && mem (set (tup a c)) K (relation a c S U) => ((subset (tup a b) P H && subset (tup a c) Q K ) => subset (tup a (tup b c)) (direct_product a b c P Q) (direct_product a b c H K)).

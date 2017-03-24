@@ -1,0 +1,6 @@
+# monot_function_4.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T V: set b).
+  subset b V T => subset (set (tup a b)) (gtmngt a b S V) (gtmngt a b S T).

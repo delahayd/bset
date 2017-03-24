@@ -1,0 +1,6 @@
+# monot_id.zf
+
+include "bset.zf".
+
+goal forall (a : type) (S U : set a).
+  subset a U S => subset (tup a a) (id a U) (id a S).

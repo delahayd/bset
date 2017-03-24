@@ -1,0 +1,6 @@
+# monot_parallel_product.zf
+
+include "bset.zf".
+
+goal forall (a b c d : type) (S : set a) (T : set b) (U : set c) (V : set d) (H P: set (tup a b)) (K Q : set (tup c d)).
+  mem (set (tup a b)) H (relation a b S T) && mem (set (tup c d)) K (relation c d U V) => ((subset (tup a b) P H && subset (tup c d) Q K ) => subset (tup (tup a c) (tup b d)) (parallel_product a b c d P Q) (parallel_product a b c d H K)).

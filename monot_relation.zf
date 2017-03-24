@@ -1,0 +1,6 @@
+# monot_relation.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S U: set a) (T V: set b).
+  subset a U S && subset b V T => subset (set (tup a b)) (relation a b U V) (relation a b S T).

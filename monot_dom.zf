@@ -1,0 +1,6 @@
+# monot_dom.zf
+
+include "bset.zf".
+
+goal forall (a b : type) (S : set a) (T : set b) (P R : set (tup a b)).
+  mem (set (tup a b)) P (relation a b S T) => (subset (tup a b) R P => subset a (dom a b R) (dom a b P)).

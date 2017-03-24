@@ -1,0 +1,6 @@
+# monot_semicolon.zf
+
+include "bset.zf".
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (H P: set (tup a b)) (K Q : set (tup b c)).
+  mem (set (tup a b)) H (relation a b S T) && mem (set (tup b c)) K (relation b c T U)  => (subset (tup a b) P H && subset (tup b c) Q K) => subset (tup a c) (semicolon a b c P Q) (semicolon a b c H K).
