@@ -17,7 +17,6 @@ val relation: pi (a b : type). set a -> set b -> set (set (tup a b)).
 val dom : pi (a b : type). set (tup a b) -> set a.
 val ran: pi (a b: type). set(tup a b) -> set b.
 val inverse : pi (a b : type). set (tup a b) -> set (tup b a).
-val tup21 : pi (a b : type). b -> a -> tup b a.
 val semicolon : pi (a b c : type). set (tup a b) -> set (tup b c) -> set (tup a c).
 val image : pi (a b : type). set (tup a b) -> set a -> set b.
 val id : pi (a : type). set a -> set (tup a a).
@@ -43,9 +42,6 @@ val snd : pi (a b : type). tup a b -> b.
 rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
 rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
 
-#tup21 --> pair
-#rewrite
-#  forall (a b : type) (x : a) (y : b). (tup21 a b y x) = (pair b a y x).
 
 #rewrite
 #  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
@@ -112,38 +108,38 @@ rewrite
 
 #ran
 rewrite
-  forall (a b : type) (P : set (tup a b)) (X : b).
-    mem b X (ran a b P) <=> (exists (A1 : a). mem (tup a b) (tup21 b a A1 X) P).
+  forall (a b : type) (P : set (tup a b)) (x : b).
+    mem b x (ran a b P) <=> (exists (A1 : a). mem (tup a b) (pair a b A1 x) P).
 
 #dom
 rewrite
-  forall (a b : type) (P : set (tup a b)) (X: a).
-    mem a X (dom a b P) <=> (exists (B1 : b). mem (tup a b) (tup21 b a X B1) P).
+  forall (a b : type) (P : set (tup a b)) (x: a).
+    mem a x (dom a b P) <=> (exists (b1 : b). mem (tup a b) (pair a b x b1) P).
 
 #inverse
 rewrite
-  forall (a b : type) (P : set (tup a b)) (X : b) (Y : a).
-    mem (tup b a) (tup21 a b X Y) (inverse a b P) <=> mem (tup a b) (tup21 b a Y X) P.
+  forall (a b : type) (P : set (tup a b)) (x : b) (y : a).
+    mem (tup b a) (pair b a x y) (inverse a b P) <=> mem (tup a b) (pair a b y x) P.
 
 #relation
 rewrite
    forall (a b : type) (U : set a) (V : set b) (R: set (tup a b)).
-     mem (set (tup a b)) R (relation a b U V) <=> (forall (X : a) (Y : b). mem (tup a b) (tup21 b a X Y) R => mem a X U && mem b Y V).
+     mem (set (tup a b)) R (relation a b U V) <=> (forall (x : a) (y : b). mem (tup a b) (pair a b x y) R => mem a x U && mem b y V).
 
 #semicolon
 rewrite
-  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (X : a) (Y : c).
-    mem (tup a c) (tup21 c a X Y) (semicolon a b c P Q) <=> (exists (B1 : b). mem (tup a b) (tup21 b a X B1) P && mem (tup b c) (tup21 c b B1 Y) Q).
+  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (x : a) (y : c).
+    mem (tup a c) (pair a c x y) (semicolon a b c P Q) <=> (exists (b1 : b). mem (tup a b) (pair a b x b1) P && mem (tup b c) (pair b c b1 y) Q).
 
 #image
 rewrite
-  forall (a b : type) (P : set (tup a b)) (W : set a) (X : b).
-    mem b X (image a b P W) <=> (exists (A1 : a). mem a A1 W && mem (tup a b) (tup21 b a A1 X) P).
+  forall (a b : type) (P : set (tup a b)) (W : set a) (x : b).
+    mem b x (image a b P W) <=> (exists (a1 : a). mem a a1 W && mem (tup a b) (pair a b a1 x) P).
 
 #id
 #rewrite
-#  forall (a : type) (U : set a) (X : a) (Y : a).
-#    mem (tup a a) (tup21 a a X Y) (id a U) <=> mem a X U && X = Y.
+#  forall (a : type) (U : set a) (x : a) (y : a).
+#    mem (tup a a) (pair a a x y) (id a U) <=> mem a x U && x = y.
 
 #rewrite
 #  forall (a : type) (U : set a) (X : a) (Y : a).
@@ -155,38 +151,38 @@ rewrite
 
 #domain_restriction
 rewrite
-  forall (a b : type) (P: set (tup a b)) (S : set a) (X : a) (Y : b).
-    mem (tup a b) (tup21 b a X Y) (domain_restriction a b S P) <=> mem (tup a b) (tup21 b a X Y) P && mem a X S.
+  forall (a b : type) (P: set (tup a b)) (S : set a) (x : a) (y : b).
+    mem (tup a b) (pair a b x y) (domain_restriction a b S P) <=> mem (tup a b) (pair a b x y) P && mem a x S.
 
 #range_restriction
 rewrite
-  forall (a b : type) (P : set (tup a b)) (T : set b) (X : a) (Y : b).
-    mem (tup a b) (tup21 b a X Y) (range_restriction a b P T) <=> mem (tup a b) (tup21 b a X Y) P && mem b Y T.
+  forall (a b : type) (P : set (tup a b)) (T : set b) (x : a) (y : b).
+    mem (tup a b) (pair a b x y) (range_restriction a b P T) <=> mem (tup a b) (pair a b x y) P && mem b y T.
 
 #domain_substraction
 rewrite
-  forall (a b : type) (P : set (tup a b)) (S : set a) (X : a) (Y : b).
-    mem (tup a b) (tup21 b a X Y) (domain_substraction a b S P) <=> mem (tup a b) (tup21 b a X Y) P && ~ (mem a X S).
+  forall (a b : type) (P : set (tup a b)) (S : set a) (x : a) (y : b).
+    mem (tup a b) (pair a b x y) (domain_substraction a b S P) <=> mem (tup a b) (pair a b x y) P && ~ (mem a x S).
 
 #range_substraction
 rewrite
-  forall (a b : type) (P : set (tup a b)) (T: set b) (X : a) (Y: b).
-    mem (tup a b) (tup21 b a X Y) (range_substraction a b P T) <=> mem (tup a b) (tup21 b a X Y) P && ~ (mem b Y T).
+  forall (a b : type) (P : set (tup a b)) (T: set b) (x : a) (y: b).
+    mem (tup a b) (pair a b x y) (range_substraction a b P T) <=> mem (tup a b) (pair a b x y) P && ~ (mem b y T).
 
 #lspl mem_overriding
 rewrite
-  forall (a b : type) (P Q : set (tup a b)) (X : a) (Y : b).
-    mem (tup a b) (tup21 b a X Y) (lspl a b Q P) <=> mem (tup a b) (tup21 b a X Y) Q && ~ mem a X (dom a b P) || mem (tup a b) (tup21 b a X Y) P.
+  forall (a b : type) (P Q : set (tup a b)) (x : a) (y : b).
+    mem (tup a b) (pair a b x y) (lspl a b Q P) <=> mem (tup a b) (pair a b x y) Q && ~ mem a x (dom a b P) || mem (tup a b) (pair a b x y) P.
 
 #direct_product
 rewrite
-  forall (a b c : type) (F : set (tup a b)) (G : set (tup a c)) (X : a) (Y : b) (Z : c).
-    mem (tup a (tup b c)) (tup21 (tup b c) a X (tup21 c b Y Z)) (direct_product a b c F G) <=> mem (tup a b) (tup21 b a X Y) F && mem (tup a c) (tup21 c a X Z) G.
+  forall (a b c : type) (F : set (tup a b)) (G : set (tup a c)) (x : a) (y : b) (z : c).
+    mem (tup a (tup b c)) (pair a (tup b c) x (pair b c y z)) (direct_product a b c F G) <=> mem (tup a b) (pair a b x y) F && mem (tup a c) (pair a c x z) G.
 
 #parallel_product
 rewrite
-  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (X : a) (Y: c) (Z : b) (W : d).
-    mem (tup (tup a c) (tup b d)) (tup21 (tup b d) (tup a c) (tup21 c a X Y) (tup21 d b Z W)) (parallel_product a b c d H K) <=> mem (tup a b) (tup21 b a X Z) H && mem (tup c d) (tup21 d c Y W) K.
+  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (x : a) (y: c) (z : b) (w : d).
+    mem (tup (tup a c) (tup b d)) (pair (tup a c) (tup b d) (pair a c x y) (pair b d z w)) (parallel_product a b c d H K) <=> mem (tup a b) (pair a b x z) H && mem (tup c d) (pair c d  y w) K.
 
 #singleton
 rewrite
