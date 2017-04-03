@@ -11,6 +11,9 @@ test: $(BRESFILES)
 clean:
 	rm -f *~ *.res
 
+frogtest:
+	frogtest run -c conf.toml
+
 .SUFFIXES: .zf .res
 
 %.res: %.zf bset.zf
