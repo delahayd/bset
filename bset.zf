@@ -43,7 +43,7 @@ rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
 rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
 
 # every element of `tup a b` is a pair
-assert forall (a b:type) (P:tup a b). P = pair a b (fst P) (snd P).
+rewrite forall (a b:type) (P:tup a b). pair a b (fst P) (snd P) = P.
 
 #rewrite
 #  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
@@ -120,13 +120,23 @@ rewrite
 
 #inverse
 rewrite
-  forall (a b : type) (P : set (tup a b)) (x : b) (y : a).
-    mem (tup b a) (pair b a x y) (inverse a b P) <=> mem (tup a b) (pair a b y x) P.
+  forall (a b : type) (P : set (tup a b)) (T: tup b a).
+    mem (tup b a) T (inverse a b P) <=> mem (tup a b) (pair (snd T) (fst T)) P.
+#rewrite
+#  forall (a b : type) (P : set (tup a b)) (x : b) (y : a).
+#    mem (tup b a) (pair b a x y) (inverse a b P) <=> mem (tup a b) (pair a b y x) P.
 
 #relation
 rewrite
    forall (a b : type) (U : set a) (V : set b) (R: set (tup a b)).
-     mem (set (tup a b)) R (relation a b U V) <=> (forall (x : a) (y : b). mem (tup a b) (pair a b x y) R => mem a x U && mem b y V).
+     mem (set (tup a b)) R (relation a b U V) <=>
+      (forall (T: tup a b).
+        mem (tup a b) T R => mem a (fst T) U && mem b (snd T) V).
+#rewrite
+#   forall (a b : type) (U : set a) (V : set b) (R: set (tup a b)).
+#     mem (set (tup a b)) R (relation a b U V) <=>
+#      (forall (x : a) (y : b).
+#        mem (tup a b) (pair a b x y) R => mem a x U && mem b y V).
 
 #semicolon
 rewrite
