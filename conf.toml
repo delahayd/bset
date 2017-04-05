@@ -13,7 +13,6 @@ dir = ["."]
 [zip]
 
 binary = "zipperposition"
-binary_deps = ["bset.zf"]
 cmd = "zipperposition $file --timeout $timeout --debug 0 --mem-limit $memory"
 unsat = "SZS status (Theorem|Unsatisfiable)"
 sat = "SZS status (CounterSatisfiable|Satisfiable)"
@@ -21,7 +20,6 @@ sat = "SZS status (CounterSatisfiable|Satisfiable)"
 [zip-avatar]
 
 binary = "zipperposition"
-binary_deps = ["bset.zf"]
 cmd = "zipperposition $file --timeout $timeout --debug 0 --mem-limit $memory --avatar"
 unsat = "SZS status (Theorem|Unsatisfiable)"
 sat = "SZS status (CounterSatisfiable|Satisfiable)"
