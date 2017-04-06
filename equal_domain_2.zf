@@ -2,4 +2,4 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T : set b) (R : set (tup a b)). mem (set (tup a b)) R (relation a b S T) => dom b a (inverse a b R) = (ran a b R).
+goal forall (a b : type) (R : set (tup a b)). dom b a (inverse a b R) = (ran a b R).

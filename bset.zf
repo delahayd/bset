@@ -101,7 +101,7 @@ rewrite
 rewrite
   forall (a b : type) (S : set a) (T : set b) (F : set (tup a b)).
     mem (set (tup a b)) F (plmngt a b S T) <=> mem (set (tup a b)) F (relation a b S T) && (forall (X : a) (Y1 Y2 : b). mem (tup a b) (pair X Y1) F && (mem (tup a b) (pair X Y2) F) => (Y1 = Y2)).
-    
+
 #--> MiNusMiNusGreaTer mnmngt mem_total_function_set
 rewrite
   forall (a b : type) (S : set a) (T : set b) (X : set (tup a b)).
@@ -208,13 +208,24 @@ rewrite
 
 #direct_product
 rewrite
-  forall (a b c : type) (F : set (tup a b)) (G : set (tup a c)) (x : a) (y : b) (z : c).
-    mem (tup a (tup b c)) (pair a (tup b c) x (pair b c y z)) (direct_product a b c F G) <=> mem (tup a b) (pair a b x y) F && mem (tup a c) (pair a c x z) G.
+  forall (a b c : type) (F : set (tup a b)) (G : set (tup a c)) (V : tup a (tup b c)).
+    mem (tup a (tup b c)) V (direct_product a b c F G)
+      <=> mem (tup a b) (pair (fst V) (fst (snd V))) F && mem (tup a c) (pair (fst V) (snd (snd V))) G.
+
+#rewrite
+#  forall (a b c : type) (F : set (tup a b)) (G : set (tup a c)) (x : a) (y : b) (z : c).
+#    mem (tup a (tup b c)) (pair a (tup b c) x (pair b c y z)) (direct_product a b c F G)
+#      <=> mem (tup a b) (pair a b x y) F && mem (tup a c) (pair a c x z) G.
 
 #parallel_product
 rewrite
-  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (x : a) (y: c) (z : b) (w : d).
-    mem (tup (tup a c) (tup b d)) (pair (tup a c) (tup b d) (pair a c x y) (pair b d z w)) (parallel_product a b c d H K) <=> mem (tup a b) (pair a b x z) H && mem (tup c d) (pair c d  y w) K.
+  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (x : a) (y: c) (z : b) (w : d) (T : tup (tup a c) (tup b d)).
+    mem (tup (tup a c) (tup b d)) T (parallel_product a b c d H K) <=> mem (tup a b) (pair a b (fst (fst T)) (fst (snd T))) H && mem (tup c d) (pair c d (snd (fst T)) (snd (snd T))) K.
+
+#rewrite
+#  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (x : a) (y: c) (z : b) (w : d).
+#    mem (tup (tup a c) (tup b d)) (pair (tup a c) (tup b d) (pair a c x y) (pair b d z w)) (parallel_product a b c d H K) <=> mem (tup a b) (pair a b x z) H && mem (tup c d) (pair c d  y w) K.
+
 
 #singleton
 rewrite
@@ -247,6 +258,11 @@ rewrite
     mem (set (tup a b)) X (gtplgt a b S T) <=> mem (set (tup a b)) X (plmngt a b S T) && mem (set (tup b a)) (inverse a b X) (plmngt b a T S).
 
 #prj1
+#rewrite
+#  forall (a b : type) (S : set a) (T : set b) (V : tup (tup a b) a).
+#   mem (tup (tup a b) a) V (prj1 a b (pair (set a) (set b) S T))
+#   <=> mem (tup (tup a b) a) V (times (tup a b) a (times a b S T) S) && (snd V) = (fst (fst a)).
+
 rewrite
   forall (a b : type) (S : set a) (T : set b) (x z : a) (y : b).
    mem (tup (tup a b) a) (pair (tup a b) a (pair a b x y) z) (prj1 a b (pair (set a) (set b) S T)) <=> mem (tup (tup a b) a) (pair (tup a b) a (pair a b x y) z) (times (tup a b) a (times a b S T) S) && z = x.
