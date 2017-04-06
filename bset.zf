@@ -140,13 +140,23 @@ rewrite
 
 #semicolon
 rewrite
-  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (x : a) (y : c).
-    mem (tup a c) (pair a c x y) (semicolon a b c P Q) <=> (exists (b1 : b). mem (tup a b) (pair a b x b1) P && mem (tup b c) (pair b c b1 y) Q).
+  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (T : (tup a c)).
+    mem (tup a c) T (semicolon a b c P Q) <=>
+    (exists (b1 : b). mem (tup a b) (pair a b (fst T) b1) P && mem (tup b c) (pair b c b1 (snd T)) Q).
+
+#rewrite
+#  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (x : a) (y : c).
+#    mem (tup a c) (pair a c x y) (semicolon a b c P Q) <=>
+#    (exists (b1 : b). mem (tup a b) (pair a b x b1) P && mem (tup b c) (pair b c b1 y) Q).
 
 #image
 rewrite
   forall (a b : type) (P : set (tup a b)) (W : set a) (x : b).
     mem b x (image a b P W) <=> (exists (a1 : a). mem a a1 W && mem (tup a b) (pair a b a1 x) P).
+
+#rewrite
+#  forall (a b : type) (P : set (tup a b)) (W : set a) (x : b).
+#    mem b x (image a b P W) <=> (exists (a1 : a). mem a a1 W && mem (tup a b) (pair a b a1 x) P).
 
 #id
 #rewrite
@@ -163,28 +173,38 @@ rewrite
 
 #domain_restriction
 rewrite
-  forall (a b : type) (P: set (tup a b)) (S : set a) (x : a) (y : b).
-    mem (tup a b) (pair a b x y) (domain_restriction a b S P) <=> mem (tup a b) (pair a b x y) P && mem a x S.
+  forall (a b : type) (P: set (tup a b)) (S : set a) (T : tup a b).
+    mem (tup a b) T (domain_restriction a b S P) <=>
+      mem (tup a b) (pair (fst T) (snd T)) P && mem a (fst T) S.
+
+#rewrite
+#  forall (a b : type) (P: set (tup a b)) (S : set a) (x : a) (y : b).
+#    mem (tup a b) (pair a b x y) (domain_restriction a b S P) <=> mem (tup a b) (pair a b x y) P && mem a x S.
 
 #range_restriction
 rewrite
-  forall (a b : type) (P : set (tup a b)) (T : set b) (x : a) (y : b).
-    mem (tup a b) (pair a b x y) (range_restriction a b P T) <=> mem (tup a b) (pair a b x y) P && mem b y T.
+  forall (a b : type) (P : set (tup a b)) (T : set b) (V: tup a b).
+    mem (tup a b) V (range_restriction a b P T) <=> mem (tup a b) (pair (fst V) (snd V)) P && mem b (snd V) T.
 
 #domain_substraction
 rewrite
-  forall (a b : type) (P : set (tup a b)) (S : set a) (x : a) (y : b).
-    mem (tup a b) (pair a b x y) (domain_substraction a b S P) <=> mem (tup a b) (pair a b x y) P && ~ (mem a x S).
+  forall (a b : type) (P : set (tup a b)) (S : set a) (T : tup a b).
+    mem (tup a b) T (domain_substraction a b S P) <=> mem (tup a b) T P && ~ (mem a (fst T) S).
 
 #range_substraction
 rewrite
-  forall (a b : type) (P : set (tup a b)) (T: set b) (x : a) (y: b).
-    mem (tup a b) (pair a b x y) (range_substraction a b P T) <=> mem (tup a b) (pair a b x y) P && ~ (mem b y T).
+  forall (a b : type) (P : set (tup a b)) (T: set b) (V : tup a b).
+    mem (tup a b) V (range_substraction a b P T) <=> mem (tup a b) V P && ~ (mem b (snd V) T).
 
 #lspl mem_overriding
 rewrite
-  forall (a b : type) (P Q : set (tup a b)) (x : a) (y : b).
-    mem (tup a b) (pair a b x y) (lspl a b Q P) <=> mem (tup a b) (pair a b x y) Q && ~ mem a x (dom a b P) || mem (tup a b) (pair a b x y) P.
+  forall (a b : type) (P Q : set (tup a b)) (T : tup a b).
+    mem (tup a b) T (lspl a b Q P) <=>
+    mem (tup a b) T Q && ~ mem a (fst T) (dom a b P) || mem (tup a b) T P.
+
+#rewrite
+#  forall (a b : type) (P Q : set (tup a b)) (x : a) (y : b).
+#    mem (tup a b) (pair a b x y) (lspl a b Q P) <=> mem (tup a b) (pair a b x y) Q && ~ mem a x (dom a b P) || mem (tup a b) (pair a b x y) P.
 
 #direct_product
 rewrite
