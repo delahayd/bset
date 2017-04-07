@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S U : set a) (T : set b) (R : set (tup a b)) (P : set (tup b a)).
- subset a U S && mem (set (tup a b)) R (relation a b S T) && mem (set (tup b a)) P (relation b a T U) => domain_restriction a a U (semicolon a b a R P) = semicolon a b a (domain_restriction a b U R) P.
+goal forall (a b : type) (S U : set a) (R : set (tup a b)) (P : set (tup b a)).
+ subset a U S => domain_restriction a a U (semicolon a b a R P) = semicolon a b a (domain_restriction a b U R) P.
