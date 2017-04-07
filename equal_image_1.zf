@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b c : type) (S U : set a) (T : set b) (V : set c) (P : set (tup a b)) (Q : set (tup b c)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup b c)) Q (relation b c T V) && subset a U S => image a c (semicolon a b c P Q) U = image b c Q (image a b P U).
+goal forall (a b c : type) (S U : set a) (P : set (tup a b)) (Q : set (tup b c)).
+  subset a U S => image a c (semicolon a b c P Q) U = image b c Q (image a b P U).

@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T : set b) (P Q : set (tup a b)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) => subset a (diff a (dom a b P) (dom a b Q)) (dom a b (diff (tup a b) P Q)).
+goal forall (a b : type) (P Q : set (tup a b)).
+  subset a (diff a (dom a b P) (dom a b Q)) (dom a b (diff (tup a b) P Q)).

@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T : set b) (P Q : set (tup a b)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) => inverse a b (lspl a b P Q) = union (tup b a) (range_substraction b a (inverse a b P) (dom a b Q)) (inverse a b Q).
+goal forall (a b : type) (P Q : set (tup a b)).
+  inverse a b (lspl a b P Q) = union (tup b a) (range_substraction b a (inverse a b P) (dom a b Q)) (inverse a b Q).

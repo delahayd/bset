@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b: type) (S U : set a) (T : set b) (P Q : set (tup a b)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) && subset a U S => image a b (lspl a b P Q) U = union b (image a b (domain_substraction a b (dom a b Q) P) U) (image a b Q U).
+goal forall (a b: type) (S U : set a) (P Q : set (tup a b)).
+  subset a U S => image a b (lspl a b P Q) U = union b (image a b (domain_substraction a b (dom a b Q) P) U) (image a b Q U).

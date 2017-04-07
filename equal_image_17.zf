@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S U : set a) (T :set b) (R : set (tup a b)).
-  mem (set (tup a b)) R (relation a b S T) && inter a (dom a b R) U = empty a => image a b R U = empty b.
+goal forall (a b : type) (U : set a) (R : set (tup a b)).
+  inter a (dom a b R) U = empty a => image a b R U = empty b.

@@ -3,4 +3,4 @@
 include "bset.zf".
 
 goal forall (a b: type) (S U : set a) (T V : set b) (R : set (tup a b)).
-  mem (set (tup a b)) R (relation a b S T) && subset b V T && subset a U S => image a b (range_substraction a b R V) U = diff b (image a b R U) V.
+ subset b V T && subset a U S => image a b (range_substraction a b R V) U = diff b (image a b R U) V.

@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T : set b) (P Q R : set (tup a b)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup a b)) Q (relation a b S T) && mem (set (tup a b)) R (relation a b S T) => lspl a b P (lspl a b Q R) = lspl a b (lspl a b P Q) R.
+goal forall (a b : type)(P Q R : set (tup a b)).
+ lspl a b P (lspl a b Q R) = lspl a b (lspl a b P Q) R.

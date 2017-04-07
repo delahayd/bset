@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T V: set b) (R : set (tup a b)).
-  mem (set (tup a b)) R (relation a b S T) && subset b V T => inverse a b (range_substraction a b R V) = domain_substraction b a V (inverse a b R).
+goal forall (a b : type) (T V: set b) (R : set (tup a b)).
+  subset b V T => inverse a b (range_substraction a b R V) = domain_substraction b a V (inverse a b R).

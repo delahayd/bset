@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b c d :type) (S : set a) (T : set b) (U : set c) (V : set d) (P : set (tup a b)) (Q : set (tup c d)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup c d)) Q (relation c d U V) => dom (tup a c) (tup b d) (parallel_product a b c d P Q) = times a c (dom a b P) (dom c d Q).
+goal forall (a b c d :type) (P : set (tup a b)) (Q : set (tup c d)).
+  dom (tup a c) (tup b d) (parallel_product a b c d P Q) = times a c (dom a b P) (dom c d Q).

@@ -4,4 +4,4 @@ include "bset.zf".
 
 goal forall (a b : type) (S : set a) (T :set b) (R : set (tup a b)).
   inverse b a (inverse a b R) = R.
-  #mem (set (tup a b)) R (relation a b S T) => inverse b a (inverse a b R) = R.
+  

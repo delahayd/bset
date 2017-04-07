@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S U V : set a) (T :set b) (R : set (tup a b)).
-  mem (set (tup a b)) R (relation a b S T) && subset a U S && subset a V S => image a b R (union a U V) = union b (image a b R U) (image a b R V).
+goal forall (a b : type) (S U V : set a) (R : set (tup a b)).
+  subset a U S && subset a V S => image a b R (union a U V) = union b (image a b R U) (image a b R V).

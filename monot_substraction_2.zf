@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T U V: set b) (P R : set (tup a b)).
-  mem (set (tup a b)) P (relation a b S T) && subset b U T => ((subset (tup a b) R P && subset b V U) => subset (tup a b) (range_substraction a b R U) (range_substraction a b P V)).
+goal forall (a b : type) (T U V: set b) (P R : set (tup a b)).
+  subset b U T => ((subset (tup a b) R P && subset b V U) => subset (tup a b) (range_substraction a b R U) (range_substraction a b P V)).
