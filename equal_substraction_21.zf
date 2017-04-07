@@ -3,4 +3,4 @@
 include "bset.zf".
 
 goal forall (a b : type) (S U V: set a) (T: set b) (R : set (tup a b)).
-  subset a U S && subset a V S && mem (set (tup a b)) R (relation a b S T) => (domain_substraction a b (inter a U V) R = union (tup a b) (domain_substraction a b U R) (domain_substraction a b V R)).
+  subset a U S && subset a V S => (domain_substraction a b (inter a U V) R = union (tup a b) (domain_substraction a b U R) (domain_substraction a b V R)).

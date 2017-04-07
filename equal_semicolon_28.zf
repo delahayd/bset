@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (x : a) (y : b) (R : set (tup b c)).
-  mem a x S && mem b y T && mem (set (tup b c)) R (relation b c T U) => semicolon a b c (singleton (tup a b) (pair a b x y)) R = times a c (singleton a x) (image b c R (singleton b y)).
+goal forall (a b c : type) (S : set a) (T : set b) (x : a) (y : b) (R : set (tup b c)).
+  mem a x S && mem b y T => semicolon a b c (singleton (tup a b) (pair a b x y)) R = times a c (singleton a x) (image b c R (singleton b y)).

@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b c : type) (S : set a) (T V: set b) (U : set c) (R : set (tup a b)) (P : set (tup b c)).
-  mem (set (tup a b)) R (relation a b S T) && subset b V T && mem (set (tup b c)) P (relation b c T U) => semicolon a b c R (domain_substraction b c V P) = semicolon a b c (range_substraction a b R V) P.
+goal forall (a b c : type) (T V: set b) (R : set (tup a b)) (P : set (tup b c)).
+  subset b V T => semicolon a b c R (domain_substraction b c V P) = semicolon a b c (range_substraction a b R V) P.

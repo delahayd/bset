@@ -3,4 +3,4 @@
 include "bset.zf".
 
 goal forall (a b : type) (S U : set a) (T W : set b) (R : set (tup a b)).
-  subset a U S && mem (set (tup a b)) R (relation a b S T) && subset b W T => domain_restriction a b U (range_substraction a b R W) = range_substraction a b (domain_restriction a b U R) W.
+  subset a U S && subset b W T => domain_restriction a b U (range_substraction a b R W) = range_substraction a b (domain_restriction a b U R) W.
