@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T: set b) (R : set (tup a b)).
-  mem (set (tup a b)) R (relation a b S T) => (domain_substraction a b (dom a b R) R = empty (tup a b)).
+goal forall (a b : type) (R : set (tup a b)).
+  (domain_substraction a b (dom a b R) R = empty (tup a b)).
