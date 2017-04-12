@@ -98,9 +98,14 @@ rewrite
     mem a x (empty a) <=> false.
 
 #+-> PLusMiNusGreaTer plmngt mem_partial_function_set
+#rewrite
+#  forall (a b : type) (S : set a) (T : set b) (F : set (tup a b)).
+#    mem (set (tup a b)) F (plmngt a b S T) <=> mem (set (tup a b)) F (relation a b S T) && (forall (X : a) (Y1 Y2 : b). mem (tup a b) (pair X Y1) F && (mem (tup a b) (pair X Y2) F) => (Y1 = Y2)).
+
 rewrite
   forall (a b : type) (S : set a) (T : set b) (F : set (tup a b)).
-    mem (set (tup a b)) F (plmngt a b S T) <=> mem (set (tup a b)) F (relation a b S T) && (forall (X : a) (Y1 Y2 : b). mem (tup a b) (pair X Y1) F && (mem (tup a b) (pair X Y2) F) => (Y1 = Y2)).
+    mem (set (tup a b)) F (plmngt a b S T) <=> (forall (X : a) (Y1 Y2 : b). mem (tup a b) (pair X Y1) F && (mem (tup a b) (pair X Y2) F) => (Y1 = Y2)).
+
 
 #--> MiNusMiNusGreaTer mnmngt mem_total_function_set
 rewrite
@@ -143,6 +148,7 @@ rewrite
   forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (T : (tup a c)).
     mem (tup a c) T (semicolon a b c P Q) <=>
     (exists (b1 : b). mem (tup a b) (pair a b (fst T) b1) P && mem (tup b c) (pair b c b1 (snd T)) Q).
+
 
 #rewrite
 #  forall (a b c : type) (P : set (tup a b)) (Q : set (tup b c)) (x : a) (y : c).
