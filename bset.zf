@@ -276,6 +276,11 @@ rewrite
 
 #prj2
 rewrite
-  forall (a b : type) (S : set a) (T : set b) (x : a) (y z : b).
-   mem (tup (tup a b) b) (pair (tup a b) b (pair a b x y) z) (prj2 a b (pair (set a) (set b) S T))
-   <=> mem (tup (tup a b) b) (pair (tup a b) b (pair a b x y) z) (times (tup a b) b (times a b S T) T) && z = y.
+  forall (a b : type) (S : set a) (T : set b) (x : a) (y z : b) (V : tup (tup a b) b).
+   mem (tup (tup a b) b) V (prj2 a b (pair (set a) (set b) S T))
+   <=> mem (tup (tup a b) b) V (times (tup a b) b (times a b S T) T) && (snd V) = (snd (fst V)).
+
+#rewrite
+#  forall (a b : type) (S : set a) (T : set b) (x : a) (y z : b).
+#   mem (tup (tup a b) b) (pair (tup a b) b (pair a b x y) z) (prj2 a b (pair (set a) (set b) S T))
+#   <=> mem (tup (tup a b) b) (pair (tup a b) b (pair a b x y) z) (times (tup a b) b (times a b S T) T) && z = y.
