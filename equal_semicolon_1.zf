@@ -3,4 +3,4 @@
 include "bset.zf".
 
 goal forall (a b c: type) (S : set a) (T : set b) (U : set c) (R : set (tup a b)) (P Q : set (tup b c)).
-  mem (set (tup b c)) P (relation b c T U) && mem (set (tup b c)) Q (relation b c T U) && mem (set (tup a b)) R (plmngt a b S T) && semicolon a b c R P = semicolon a b c R Q => P = Q.
+  mem (set (tup b c)) P (relation b c T U) && mem (set (tup b c)) Q (relation b c T U) && mem (set (tup a b)) R (plmngtgt a b S T) && semicolon a b c R P = semicolon a b c R Q => P = Q.
