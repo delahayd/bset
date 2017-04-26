@@ -13,7 +13,7 @@ dir = ["."]
 [zip]
 
 binary = "zipperposition"
-cmd = "zipperposition $file --timeout $timeout --debug 0 --mem-limit $memory"
+cmd = "zipperposition $file --timeout $timeout --debug 0 --mem-limit $memory --no-avatar"
 unsat = "SZS status (Theorem|Unsatisfiable)"
 sat = "SZS status (CounterSatisfiable|Satisfiable)"
 
