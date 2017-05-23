@@ -11,13 +11,13 @@ val [infix "∪"] union : pi (a : type). set a -> set a -> set a.
 val inter : pi (a : type). set a -> set a -> set a.
 val diff : pi (a : type). set a -> set a -> set a.
 val [infix "Ø"] empty: pi (a : type). set a.
-val plmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
-val mnmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val [infix "+->"] plmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val [infix "-->"] mnmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val relation: pi (a b : type). set a -> set b -> set (set (tup a b)).
 val dom : pi (a b : type). set (tup a b) -> set a.
 val ran: pi (a b: type). set(tup a b) -> set b.
 val inverse : pi (a b : type). set (tup a b) -> set (tup b a).
-val semicolon : pi (a b c : type). set (tup a b) -> set (tup b c) -> set (tup a c).
+val [infix ";"] semicolon : pi (a b c : type). set (tup a b) -> set (tup b c) -> set (tup a c).
 val image : pi (a b : type). set (tup a b) -> set a -> set b.
 val id : pi (a : type). set a -> set (tup a a).
 val [infix "◁"] domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
@@ -28,13 +28,13 @@ val lspl : pi (a b : type). set (tup a b) -> set (tup a b) -> set (tup a b).
 val direct_product : pi (a b c : type). set (tup a b) -> set (tup a c) -> set (tup a (tup b c)).
 val parallel_product : pi (a b c d : type). set (tup a b) ->  set (tup c d) -> set (tup (tup a c) (tup b d)).
 val singleton : pi (a : type). a -> set a.
-val plmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
-val gtmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
-val gtmngt : pi (a b : type). set a -> set b -> set (set(tup a b)).
-val mnmngtgt : pi (a b : type). set a -> set b -> set (set(tup a b)).
-val gtplgt : pi (a b : type). set a -> set b -> set (set(tup a b)).
-val prj1 : pi (a b : type). tup (set a) (set b) -> set (tup (tup a b) a).
-val prj2 : pi (a b : type). tup (set a) (set b) -> set (tup (tup a b) b).
+val [infix "+->>"] plmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val [infix ">->>"] gtmngtgt : pi (a b : type). set a -> set b -> set (set (tup a b)).
+val [infix ">->"] gtmngt : pi (a b : type). set a -> set b -> set (set(tup a b)).
+val [infix "-->>"] mnmngtgt : pi (a b : type). set a -> set b -> set (set(tup a b)).
+val [infix ">+>"] gtplgt : pi (a b : type). set a -> set b -> set (set(tup a b)).
+val [prefix "π₁"] prj1 : pi (a b : type). tup (set a) (set b) -> set (tup (tup a b) a).
+val [prefix "π₂"] prj2 : pi (a b : type). tup (set a) (set b) -> set (tup (tup a b) b).
 
 val fst : pi (a b : type). tup a b -> a.
 val snd : pi (a b : type). tup a b -> b.
