@@ -2,5 +2,10 @@
 
 include "bset.zf".
 
-goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup b c)).
-  mem (set (tup a b)) P (relation a b S T) && mem (set (tup b c)) Q (relation b c T U) => image (tup a b) (tup a c) (parallel_product a a b c (id a S) Q) P = semicolon a b c P Q.
+#goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup b c)).
+#  mem (set (tup a b)) P (relation a b S T) && mem (set (tup b c)) Q (relation b c T U) => image (tup a b) (tup a c) (parallel_product a a b c (id a S) Q) P = semicolon a b c P Q.
+
+#goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup b c)). image (tup a b) (tup a c) (parallel_product a a b c (id a S) Q) P = semicolon a b c P Q.
+
+goal forall (a b c : type) (S : set a) (T : set b) (U : set c) (P : set (tup a b)) (Q : set (tup b c)) (x : (tup a c)).
+  mem  (tup a c) x (image (tup a b) (tup a c) (parallel_product a a b c (id a S) Q) P) => mem  (tup a c) x (semicolon a b c P Q).
