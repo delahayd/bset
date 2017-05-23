@@ -2,15 +2,15 @@
 
 val tup : type -> type -> type.
 val set : type -> type.
-val mem : pi (a : type). a -> set a -> prop.
+val [infix "∈"] mem : pi (a : type). a -> set a -> prop.
 val pair : pi (a b : type).a -> b -> (tup a b).
-val power : pi (a : type). set a -> set (set a).
-val subset : pi (a : type). set a -> set a -> prop.
+val [prefix "ℙ"] power : pi (a : type). set a -> set (set a).
+val [infix "⊆"] subset : pi (a : type). set a -> set a -> prop.
 val times : pi (a b : type). set a -> set b -> set (tup a b).
-val union : pi (a : type). set a -> set a -> set a.
+val [infix "∪"] union : pi (a : type). set a -> set a -> set a.
 val inter : pi (a : type). set a -> set a -> set a.
 val diff : pi (a : type). set a -> set a -> set a.
-val empty: pi (a : type). set a.
+val [infix "Ø"] empty: pi (a : type). set a.
 val plmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val mnmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val relation: pi (a b : type). set a -> set b -> set (set (tup a b)).
@@ -20,10 +20,10 @@ val inverse : pi (a b : type). set (tup a b) -> set (tup b a).
 val semicolon : pi (a b c : type). set (tup a b) -> set (tup b c) -> set (tup a c).
 val image : pi (a b : type). set (tup a b) -> set a -> set b.
 val id : pi (a : type). set a -> set (tup a a).
-val domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
-val range_restriction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
-val domain_substraction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
-val range_substraction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
+val [infix "◁"] domain_restriction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
+val [infix "▷"] range_restriction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
+val [infix "⩤"]domain_substraction : pi (a b : type). set a -> set (tup a b) -> set (tup a b).
+val [infix "⩥"] range_substraction : pi (a b : type). set (tup a b) -> set b -> set (tup a b).
 val lspl : pi (a b : type). set (tup a b) -> set (tup a b) -> set (tup a b).
 val direct_product : pi (a b c : type). set (tup a b) -> set (tup a c) -> set (tup a (tup b c)).
 val parallel_product : pi (a b c d : type). set (tup a b) ->  set (tup c d) -> set (tup (tup a c) (tup b d)).
@@ -43,7 +43,7 @@ rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
 rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
 
 # every element of `tup a b` is a pair
-rewrite forall (a b:type) (P:tup a b). pair a b (fst P) (snd P) = P.
+assert forall (a b:type) (P:tup a b). pair a b (fst P) (snd P) = P.
 
 #rewrite
 #  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
