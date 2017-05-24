@@ -2,4 +2,4 @@
 
 include "bset.zf".
 
-goal forall a S T U. union a (union a S T) U = union _ S (union _ T U).
+goal forall a S T U. union a (union a S T) U = union a S (union a T U).

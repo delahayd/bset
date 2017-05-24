@@ -4,4 +4,4 @@ include "bset.zf".
 
 goal
   forall a S T U V.
-    subset a U S && subset a V T => subset _ (times _ _ U V) (times _ _ S T).
+    subset a U S && subset a V T => subset (tup a a) (times a a U V) (times a a S T).

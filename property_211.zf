@@ -2,4 +2,4 @@
 
 include "bset.zf".
 
-goal forall a S T. subset a S T => subset _ (power _ S) (power _ T).
+goal forall a S T. subset a S T => subset (set a) (power a S) (power a T).

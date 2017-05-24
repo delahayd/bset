@@ -3,4 +3,4 @@
 include "bset.zf".
 
 goal forall a S T U.
-  inter a S (union a T U) = union _ (inter _ S T) (inter _ S U).
+  inter a S (union a T U) = union a (inter a S T) (inter a S U).
