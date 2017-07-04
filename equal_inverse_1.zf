@@ -2,6 +2,6 @@
 
 include "bset.zf".
 
-goal forall (a b : type) (S : set a) (T :set b) (R : set (tup a b)).
+goal forall (a b : type) (R : set (tup a b)).
   inverse b a (inverse a b R) = R.
   

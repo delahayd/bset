@@ -3,5 +3,5 @@
 include "bset.zf".
 
 goal
-  forall a S T U V.
+  forall (a : type) (S T U V : set a).
     subset a U S && subset a V T => subset (tup a a) (times a a U V) (times a a S T).

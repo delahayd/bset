@@ -2,5 +2,5 @@
 
 include "bset.zf".
 
-goal forall a S T U.
+goal forall (a : type) (S T U : set a).
   inter a S (union a T U) = union a (inter a S T) (inter a S U).
