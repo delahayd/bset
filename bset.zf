@@ -225,7 +225,7 @@ rewrite
 
 #parallel_product
 rewrite
-  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (x : a) (y: c) (z : b) (w : d) (T : tup (tup a c) (tup b d)).
+  forall (a b c d : type) (H : set (tup a b)) (K : set (tup c d)) (T : tup (tup a c) (tup b d)).
     mem (tup (tup a c) (tup b d)) T (parallel_product a b c d H K) <=> mem (tup a b) (pair a b (fst (fst T)) (fst (snd T))) H && mem (tup c d) (pair c d (snd (fst T)) (snd (snd T))) K.
 
 #rewrite
@@ -276,7 +276,7 @@ rewrite
 
 #prj2
 rewrite
-  forall (a b : type) (S : set a) (T : set b) (x : a) (y z : b) (V : tup (tup a b) b).
+  forall (a b : type) (S : set a) (T : set b) (V : tup (tup a b) b).
    mem (tup (tup a b) b) V (prj2 a b (pair (set a) (set b) S T))
    <=> mem (tup (tup a b) b) V (times (tup a b) b (times a b S T) T) && (snd V) = (snd (fst V)).
 
