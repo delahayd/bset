@@ -10,7 +10,7 @@ val times : pi (a b : type). set a -> set b -> set (tup a b).
 val [infix "∪"] union : pi (a : type). set a -> set a -> set a.
 val inter : pi (a : type). set a -> set a -> set a.
 val diff : pi (a : type). set a -> set a -> set a.
-val [infix "Ø"] empty: pi (a : type). set a.
+val [prefix "Ø"] empty: pi (a : type). set a.
 val [infix "+->"] plmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val [infix "-->"] mnmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val relation: pi (a b : type). set a -> set b -> set (set (tup a b)).
