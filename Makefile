@@ -1,5 +1,6 @@
 # Makefile
 
+SHELL:=/bin/bash
 ZIPPER=zipperposition
 ARCHSAT=archsat
 TIMEOUT=3
