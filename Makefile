@@ -25,7 +25,7 @@ frogtest:
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
         else echo -e "\033[31mFail\033[39m"; fi ; \
         echo -n "[ArchSat] **** Testing file $<: "; \
-        $(ARCHSAT) -x +rwrt -t 3 -s $(MEMLIMIT)M -o SZS $< &> $@.archsat; \
+        $(ARCHSAT) -x +rwrt,+meta --meta.find=simple -t 3 -s $(MEMLIMIT)M -o SZS $< &> $@.archsat; \
         tmp=`cat $@.archsat | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
         else echo -e "\033[31mFail\033[39m"; fi
