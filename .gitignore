@@ -1,1 +1,5 @@
 *.res*
+archsat.fail
+archsat.valid
+archsat.limit
+archsat.unkown

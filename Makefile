@@ -2,7 +2,7 @@
 
 SHELL:=/bin/bash
 ZIPPER=zipperposition
-ARCHSAT=archsat
+ARCHSAT=/home/guigui/build/archsat/archsat
 TIMEOUT=3
 MEMLIMIT=2000
 BFILES=$(shell find \( -name '*.zf' \) -and \( -not -name bset.zf \))
@@ -29,3 +29,9 @@ frogtest:
         tmp=`cat $@.archsat | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
         else echo -e "\033[31mFail\033[39m"; fi
+
+analyze: $(BRESFILES)
+	grep -l 'Counter' *.res.archsat | sort -V > archsat.fail
+	grep -l 'Theorem' *.res.archsat | sort -V > archsat.valid
+	egrep -l 'TimeOut|MemoryOut' *.res.archsat | sort -V > archsat.limit
+	grep -l 'Unknown' *.res.archsat | sort -V > archsat.unkown
