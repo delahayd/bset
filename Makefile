@@ -35,3 +35,8 @@ analyze: $(BRESFILES)
 	grep -l 'Theorem' *.res.archsat | sort -V > archsat.valid
 	egrep -l 'TimeOut|MemoryOut' *.res.archsat | sort -V > archsat.limit
 	grep -l 'Unknown' *.res.archsat | sort -V > archsat.unkown
+	grep -l 'Error' *.res.archsat | sort -V > archsat.error
+
+summary: analyze
+	wc -l archsat.*
+
