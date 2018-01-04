@@ -25,18 +25,24 @@ frogtest:
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
         else echo -e "\033[31mFail\033[39m"; fi ; \
         echo -n "[ArchSat] **** Testing file $<: "; \
-        $(ARCHSAT) -x +rwrt,+meta --meta.find=simple -t 3 -s $(MEMLIMIT)M -o SZS $< &> $@.archsat; \
+        $(ARCHSAT) -x +rwrt,+meta --meta.find=simple -t $(TIMEOUT)s -s $(MEMLIMIT)M -o SZS $< &> $@.archsat; \
         tmp=`cat $@.archsat | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
         else echo -e "\033[31mFail\033[39m"; fi
 
 analyze: $(BRESFILES)
 	grep -l 'Counter' *.res.archsat | sort -V > archsat.fail
+	grep -l 'Counter' *.res.zipper | sort -V > zipper.fail
 	grep -l 'Theorem' *.res.archsat | sort -V > archsat.valid
-	egrep -l 'TimeOut|MemoryOut' *.res.archsat | sort -V > archsat.limit
-	grep -l 'Unknown' *.res.archsat | sort -V > archsat.unkown
+	grep -l 'Theorem' *.res.zipper | sort -V > zipper.valid
+	egrep -l 'TimeOut|MemoryOut|ResourceOut' *.res.archsat | sort -V > archsat.limit
+	egrep -l 'TimeOut|MemoryOut|ResourceOut' *.res.zipper | sort -V > zipper.limit
+	egrep -l 'Unknown|GaveUp' *.res.archsat | sort -V > archsat.unkown
+	egrep -l 'Unknown|GaveUp' *.res.zipper | sort -V > zipper.unkown
 	grep -l 'Error' *.res.archsat | sort -V > archsat.error
+	grep -l 'Error' *.res.zipper | sort -V > zipper.error
 
 summary: analyze
+	wc -l zipper.*
 	wc -l archsat.*
 
