@@ -1,21 +1,21 @@
 # bset.zf
 
-val tup : type -> type -> type.
+val [infix "*"] tup : type -> type -> type.
 val set : type -> type.
 val [infix "∈"] mem : pi (a : type). a -> set a -> prop.
-val pair : pi (a b : type).a -> b -> (tup a b).
+val [infix ","] pair : pi (a b : type). a -> b -> (tup a b).
 val [prefix "ℙ"] power : pi (a : type). set a -> set (set a).
 val [infix "⊆"] subset : pi (a : type). set a -> set a -> prop.
-val times : pi (a b : type). set a -> set b -> set (tup a b).
+val [infer "★"] times : pi (a b : type). set a -> set b -> set (tup a b).
 val [infix "∪"] union : pi (a : type). set a -> set a -> set a.
-val inter : pi (a : type). set a -> set a -> set a.
-val diff : pi (a : type). set a -> set a -> set a.
+val [infix "∩"] inter : pi (a : type). set a -> set a -> set a.
+val [infix "-"] diff : pi (a : type). set a -> set a -> set a.
 val [prefix "Ø"] empty: pi (a : type). set a.
 val [infix "+->"] plmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val [infix "-->"] mnmngt : pi (a b : type). set a -> set b -> set (set (tup a b)).
 val relation: pi (a b : type). set a -> set b -> set (set (tup a b)).
 val dom : pi (a b : type). set (tup a b) -> set a.
-val ran: pi (a b: type). set(tup a b) -> set b.
+val [prefix "Img"] ran: pi (a b: type). set(tup a b) -> set b.
 val inverse : pi (a b : type). set (tup a b) -> set (tup b a).
 val [infix ";"] semicolon : pi (a b c : type). set (tup a b) -> set (tup b c) -> set (tup a c).
 val image : pi (a b : type). set (tup a b) -> set a -> set b.
@@ -36,8 +36,8 @@ val [infix ">+>"] gtplgt : pi (a b : type). set a -> set b -> set (set(tup a b))
 val [prefix "π₁"] prj1 : pi (a b : type). tup (set a) (set b) -> set (tup (tup a b) a).
 val [prefix "π₂"] prj2 : pi (a b : type). tup (set a) (set b) -> set (tup (tup a b) b).
 
-val fst : pi (a b : type). tup a b -> a.
-val snd : pi (a b : type). tup a b -> b.
+val [prefix "fst"] fst : pi (a b : type). tup a b -> a.
+val [prefix "snd"] snd : pi (a b : type). tup a b -> b.
 
 rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
 rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
