@@ -43,7 +43,7 @@ rewrite forall (a b : type) (x:a)(y:b). fst (pair _ _ x y) = x.
 rewrite forall (a b : type) (x:a)(y:b). snd (pair _ _ x y) = y.
 
 # every element of `tup a b` is a pair
-assert forall (a b:type) (P:tup a b). pair a b (fst P) (snd P) = P.
+rewrite forall (a b:type) (P:tup a b). pair a b (fst P) (snd P) = P.
 
 #rewrite
 #  forall (a b : type) (z : tup a b) (S : set a) (T : set b).
