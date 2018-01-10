@@ -1,0 +1,29 @@
+# $Id$
+
+SHELL:=/bin/bash
+ALTERGO=alt-ergo
+TIMEOUT=3
+BFILES=$(shell ls *.why)
+BRESFILES=$(BFILES:%.why=%.res)
+
+test: $(BRESFILES)
+
+analyze: $(BRESFILES)
+	-@grep -l "Valid" *.res.alt-ergo | sort -V > alt-ergo.valid; \
+	grep -l "I don't know" *.res.alt-ergo | sort -V > alt-ergo.unknown; \
+        grep -l "Timeout" *.res.alt-ergo | sort -V > alt-ergo.limit
+
+summary: analyze
+	-@wc -l alt-ergo.*
+
+clean:
+	rm -f *~ *.res*
+
+.SUFFIXES: .why .res
+
+%.res: %.why
+	-@echo -n "[Alt-Ergo] **** Testing file $<: "; touch $@; \
+        $(ALTERGO) -timelimit $(TIMEOUT) $< > $@.alt-ergo; \
+        tmp=`cat $@.alt-ergo | grep "Valid"`; \
+        if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
+        else echo -e "\033[31mFail\033[39m"; fi 

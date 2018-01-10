@@ -1,5 +1,7 @@
 *.res*
-archsat.fail
-archsat.valid
-archsat.limit
-archsat.unkown
+alt-ergo.*
+archsat.*
+cvc4.*
+e.*
+princess.*
+zipper.*

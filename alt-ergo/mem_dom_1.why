@@ -1,0 +1,556 @@
+(* this is the prelude for Alt-Ergo, any versions *)
+type 'a set
+
+logic mem : 'a, 'a set -> prop
+
+predicate infix_eqeq(s: 'a set, t: 'a set) =
+  (forall x:'a. (mem(x, s) <-> mem(x, t)))
+
+logic power : 'a set -> 'a set set
+
+logic non_empty_power : 'a set -> 'a set set
+
+predicate subset(s: 'a set, t: 'a set) = mem(s, power(t))
+
+predicate subsetnoteq(s: 'a set, t: 'a set) = (subset(s, t) and
+  (not infix_eqeq(s, t)))
+
+logic empty : 'a set
+
+predicate is_empty(s: 'a set) = (forall x:'a. (not mem(x, s)))
+
+axiom empty_def1 : is_empty((empty : 'a set))
+
+axiom empty1 : (forall x:'a. (not mem(x, (empty : 'a set))))
+
+logic add : 'a, 'a set -> 'a set
+
+axiom add_def1106 :
+  (forall x:'a. forall y:'a.
+  (forall s:'a set. (mem(x, add(y, s)) -> ((x = y) or mem(x, s)))))
+
+axiom add_def1107 :
+  (forall x:'a. forall y:'a.
+  (forall s:'a set. (((x = y) or mem(x, s)) -> mem(x, add(y, s)))))
+
+logic singleton : 'a -> 'a set
+
+axiom mem_singleton106 :
+  (forall x:'a. forall y:'a. (mem(x, singleton(y)) -> (x = y)))
+
+axiom mem_singleton107 :
+  (forall x:'a. forall y:'a. ((x = y) -> mem(x, singleton(y))))
+
+logic remove : 'a, 'a set -> 'a set
+
+axiom remove_def1159 :
+  (forall x:'a. forall y:'a. forall s:'a set. (mem(x, remove(y, s)) ->
+  (not (x = y))))
+
+axiom remove_def1160 :
+  (forall x:'a. forall y:'a. forall s:'a set. (mem(x, remove(y, s)) -> mem(x,
+  s)))
+
+axiom remove_def1161 :
+  (forall x:'a. forall y:'a. forall s:'a set. (((not (x = y)) and mem(x,
+  s)) -> mem(x, remove(y, s))))
+
+logic all : 'a set
+
+axiom all_def : (forall x:'a. mem(x, (all : 'a set)))
+
+logic union : 'a set, 'a set -> 'a set
+
+axiom mem_union106 :
+  (forall s:'a set. forall t:'a set. forall x:'a. (mem(x, union(s, t)) ->
+  (mem(x, s) or mem(x, t))))
+
+axiom mem_union107 :
+  (forall s:'a set. forall t:'a set. forall x:'a. ((mem(x, s) or mem(x,
+  t)) -> mem(x, union(s, t))))
+
+logic inter : 'a set, 'a set -> 'a set
+
+axiom mem_inter159 :
+  (forall s:'a set. forall t:'a set. forall x:'a. (mem(x, inter(s, t)) ->
+  mem(x, s)))
+
+axiom mem_inter160 :
+  (forall s:'a set. forall t:'a set. forall x:'a. (mem(x, inter(s, t)) ->
+  mem(x, t)))
+
+axiom mem_inter161 :
+  (forall s:'a set. forall t:'a set. forall x:'a. ((mem(x, s) and mem(x,
+  t)) -> mem(x, inter(s, t))))
+
+logic diff : 'a set, 'a set -> 'a set
+
+axiom mem_diff159 :
+  (forall s:'a set. forall t:'a set. forall x:'a. (mem(x, diff(s, t)) ->
+  mem(x, s)))
+
+axiom mem_diff160 :
+  (forall s:'a set. forall t:'a set. forall x:'a. (mem(x, diff(s, t)) ->
+  (not mem(x, t))))
+
+axiom mem_diff161 :
+  (forall s:'a set. forall t:'a set. forall x:'a. ((mem(x, s) and (not mem(x,
+  t))) -> mem(x, diff(s, t))))
+
+type ('a, 'a1) tuple2 = { Tuple2_proj_1 : 'a; Tuple2_proj_2 : 'a1
+}
+
+logic times : 'a2 set, 'b set -> ('a2, 'b) tuple2 set
+
+axiom mem_times159 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. (mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }, times(s, t)) -> mem(x, s)))
+
+axiom mem_times160 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. (mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }, times(s, t)) -> mem(y, t)))
+
+axiom mem_times161 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. ((mem(x,
+  s) and mem(y, t)) -> mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, times(s,
+  t))))
+
+axiom mem_power106 :
+  (forall s:'a set. forall t:'a set. (mem(s, power(t)) ->
+  (forall x:'a. (mem(x, s) -> mem(x, t)))))
+
+axiom mem_power107 :
+  (forall s:'a set. forall t:'a set.
+  ((forall x:'a. (mem(x, s) -> mem(x, t))) -> mem(s, power(t))))
+
+axiom mem_non_empty_power159 :
+  (forall s:'a set. forall t:'a set. (mem(s, non_empty_power(t)) ->
+  (forall x:'a. (mem(x, s) -> mem(x, t)))))
+
+axiom mem_non_empty_power160 :
+  (forall s:'a set. forall t:'a set. (mem(s, non_empty_power(t)) ->
+  (not infix_eqeq(s, (empty : 'a set)))))
+
+axiom mem_non_empty_power161 :
+  (forall s:'a set. forall t:'a set.
+  (((forall x:'a. (mem(x, s) -> mem(x, t))) and (not infix_eqeq(s,
+  (empty : 'a set)))) -> mem(s, non_empty_power(t))))
+
+logic choose : 'a set -> 'a
+
+logic relation : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_relation159 :
+  (forall u:'a set. forall v:'b set. forall r:('a, 'b) tuple2 set. (mem(r,
+  relation(u, v)) ->
+  (forall x:'a. forall y:'b. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y },
+  r) -> mem(x, u)))))
+
+axiom mem_relation160 :
+  (forall u:'a set. forall v:'b set. forall r:('a, 'b) tuple2 set. (mem(r,
+  relation(u, v)) ->
+  (forall x:'a. forall y:'b. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y },
+  r) -> mem(y, v)))))
+
+axiom mem_relation161 :
+  (forall u:'a set. forall v:'b set. forall r:('a, 'b) tuple2 set.
+  ((forall x:'a. forall y:'b. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y },
+   r) -> (mem(x, u) and mem(y, v)))) ->
+  mem(r, relation(u, v))))
+
+logic inverse : ('a, 'b) tuple2 set -> ('b, 'a) tuple2 set
+
+axiom mem_inverse106 :
+  (forall p:('a, 'b) tuple2 set. forall x:'b. forall y:'a. (mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }, inverse(p)) -> mem({
+  Tuple2_proj_1 = y; Tuple2_proj_2 = x }, p)))
+
+axiom mem_inverse107 :
+  (forall p:('a, 'b) tuple2 set. forall x:'b. forall y:'a. (mem({
+  Tuple2_proj_1 = y; Tuple2_proj_2 = x }, p) -> mem({ Tuple2_proj_1 = x;
+  Tuple2_proj_2 = y }, inverse(p))))
+
+logic dom : ('a, 'b) tuple2 set -> 'a set
+
+axiom mem_dom106 :
+  (forall p:('a, 'b) tuple2 set. forall x:'a. (mem(x, dom(p)) ->
+  (exists b1:'b. mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = b1 }, p))))
+
+axiom mem_dom107 :
+  (forall p:('a, 'b) tuple2 set. forall x:'a.
+  ((exists b1:'b. mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = b1 }, p)) ->
+  mem(x, dom(p))))
+
+logic ran : ('a, 'b) tuple2 set -> 'b set
+
+axiom mem_ran106 :
+  (forall p:('a, 'b) tuple2 set. forall x:'b. (mem(x, ran(p)) ->
+  (exists a1:'a. mem({ Tuple2_proj_1 = a1; Tuple2_proj_2 = x }, p))))
+
+axiom mem_ran107 :
+  (forall p:('a, 'b) tuple2 set. forall x:'b.
+  ((exists a1:'a. mem({ Tuple2_proj_1 = a1; Tuple2_proj_2 = x }, p)) ->
+  mem(x, ran(p))))
+
+logic semicolon : ('a, 'b) tuple2 set, ('b, 'c) tuple2 set -> ('a,
+  'c) tuple2 set
+
+axiom mem_semicolon106 :
+  (forall p:('a, 'b) tuple2 set. forall q:('b, 'c) tuple2 set. forall x:'a.
+  forall y:'c. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, semicolon(p,
+  q)) ->
+  (exists b1:'b. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = b1 }, p) and mem({
+  Tuple2_proj_1 = b1; Tuple2_proj_2 = y }, q)))))
+
+axiom mem_semicolon107 :
+  (forall p:('a, 'b) tuple2 set. forall q:('b, 'c) tuple2 set. forall x:'a.
+  forall y:'c.
+  ((exists b1:'b. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = b1 }, p) and
+   mem({ Tuple2_proj_1 = b1; Tuple2_proj_2 = y }, q))) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, semicolon(p, q))))
+
+logic semicolon_back : ('b, 'c) tuple2 set, ('a, 'b) tuple2 set -> ('a,
+  'c) tuple2 set
+
+axiom semicolon_back1 :
+  (forall p:('a, 'b) tuple2 set. forall q:('b, 'c) tuple2 set.
+  (semicolon_back(q, p) = semicolon(p, q)))
+
+logic id : 'a set -> ('a, 'a) tuple2 set
+
+axiom mem_id159 :
+  (forall u:'a set. forall x:'a. forall y:'a. (mem({ Tuple2_proj_1 = x;
+  Tuple2_proj_2 = y }, id(u)) -> mem(x, u)))
+
+axiom mem_id160 :
+  (forall u:'a set. forall x:'a. forall y:'a. (mem({ Tuple2_proj_1 = x;
+  Tuple2_proj_2 = y }, id(u)) -> (x = y)))
+
+axiom mem_id161 :
+  (forall u:'a set. forall x:'a. forall y:'a. ((mem(x, u) and (x = y)) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, id(u))))
+
+logic domain_restriction : 'a set, ('a, 'b) tuple2 set -> ('a, 'b) tuple2 set
+
+axiom mem_domain_restriction159 :
+  (forall p:('a, 'b) tuple2 set. forall s:'a set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, domain_restriction(s, p)) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p)))
+
+axiom mem_domain_restriction160 :
+  (forall p:('a, 'b) tuple2 set. forall s:'a set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, domain_restriction(s, p)) ->
+  mem(x, s)))
+
+axiom mem_domain_restriction161 :
+  (forall p:('a, 'b) tuple2 set. forall s:'a set. forall x:'a. forall y:'b.
+  ((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p) and mem(x, s)) -> mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }, domain_restriction(s, p))))
+
+logic range_restriction : ('a, 'b) tuple2 set, 'b set -> ('a, 'b) tuple2 set
+
+axiom mem_range_restriction159 :
+  (forall p:('a, 'b) tuple2 set. forall t:'b set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, range_restriction(p, t)) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p)))
+
+axiom mem_range_restriction160 :
+  (forall p:('a, 'b) tuple2 set. forall t:'b set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, range_restriction(p, t)) ->
+  mem(y, t)))
+
+axiom mem_range_restriction161 :
+  (forall p:('a, 'b) tuple2 set. forall t:'b set. forall x:'a. forall y:'b.
+  ((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p) and mem(y, t)) -> mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }, range_restriction(p, t))))
+
+logic domain_substraction : 'a set, ('a, 'b) tuple2 set -> ('a,
+  'b) tuple2 set
+
+axiom mem_domain_substraction159 :
+  (forall p:('a, 'b) tuple2 set. forall s:'a set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, domain_substraction(s,
+  p)) -> mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p)))
+
+axiom mem_domain_substraction160 :
+  (forall p:('a, 'b) tuple2 set. forall s:'a set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, domain_substraction(s,
+  p)) -> (not mem(x, s))))
+
+axiom mem_domain_substraction161 :
+  (forall p:('a, 'b) tuple2 set. forall s:'a set. forall x:'a. forall y:'b.
+  ((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p) and (not mem(x, s))) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, domain_substraction(s, p))))
+
+logic range_substraction : ('a, 'b) tuple2 set, 'b set -> ('a, 'b) tuple2 set
+
+axiom mem_range_substraction159 :
+  (forall p:('a, 'b) tuple2 set. forall t:'b set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, range_substraction(p, t)) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p)))
+
+axiom mem_range_substraction160 :
+  (forall p:('a, 'b) tuple2 set. forall t:'b set. forall x:'a. forall y:'b.
+  (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, range_substraction(p, t)) ->
+  (not mem(y, t))))
+
+axiom mem_range_substraction161 :
+  (forall p:('a, 'b) tuple2 set. forall t:'b set. forall x:'a. forall y:'b.
+  ((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p) and (not mem(y, t))) ->
+  mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, range_substraction(p, t))))
+
+logic image : ('a, 'b) tuple2 set, 'a set -> 'b set
+
+axiom mem_image106 :
+  (forall p:('a, 'b) tuple2 set. forall w:'a set. forall x:'b. (mem(x,
+  image(p, w)) ->
+  (exists a1:'a. (mem(a1, w) and mem({ Tuple2_proj_1 = a1; Tuple2_proj_2 = x
+  }, p)))))
+
+axiom mem_image107 :
+  (forall p:('a, 'b) tuple2 set. forall w:'a set. forall x:'b.
+  ((exists a1:'a. (mem(a1, w) and mem({ Tuple2_proj_1 = a1; Tuple2_proj_2 = x
+   }, p))) ->
+  mem(x, image(p, w))))
+
+logic infix_lspl : ('a, 'b) tuple2 set, ('a, 'b) tuple2 set -> ('a,
+  'b) tuple2 set
+
+axiom mem_overriding106 :
+  (forall q:('a, 'b) tuple2 set. forall p:('a, 'b) tuple2 set. forall x:'a.
+  forall y:'b. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, infix_lspl(q,
+  p)) -> ((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, q) and (not mem(x,
+  dom(p)))) or mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, p))))
+
+axiom mem_overriding107 :
+  (forall q:('a, 'b) tuple2 set. forall p:('a, 'b) tuple2 set. forall x:'a.
+  forall y:'b. (((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, q) and
+  (not mem(x, dom(p)))) or mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y },
+  p)) -> mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y }, infix_lspl(q, p))))
+
+logic direct_product : ('a, 'b) tuple2 set, ('a, 'c) tuple2 set -> ('a, ('b,
+  'c) tuple2) tuple2 set
+
+axiom mem_direct_product159 :
+  (forall f:('a, 'b) tuple2 set. forall g:('a, 'c) tuple2 set. forall x:'a.
+  forall y:'b. forall z:'c. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = {
+  Tuple2_proj_1 = y; Tuple2_proj_2 = z } }, direct_product(f, g)) -> mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }, f)))
+
+axiom mem_direct_product160 :
+  (forall f:('a, 'b) tuple2 set. forall g:('a, 'c) tuple2 set. forall x:'a.
+  forall y:'b. forall z:'c. (mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = {
+  Tuple2_proj_1 = y; Tuple2_proj_2 = z } }, direct_product(f, g)) -> mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = z }, g)))
+
+axiom mem_direct_product161 :
+  (forall f:('a, 'b) tuple2 set. forall g:('a, 'c) tuple2 set. forall x:'a.
+  forall y:'b. forall z:'c. ((mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y },
+  f) and mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = z }, g)) -> mem({
+  Tuple2_proj_1 = x; Tuple2_proj_2 = { Tuple2_proj_1 = y; Tuple2_proj_2 = z }
+  }, direct_product(f, g))))
+
+logic prj1 : ('a set, 'b set) tuple2 -> (('a, 'b) tuple2, 'a) tuple2 set
+
+axiom mem_proj_op_1159 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. forall z:'a.
+  (mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, prj1({ Tuple2_proj_1 = s; Tuple2_proj_2 = t })) ->
+  mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, times(times(s, t), s))))
+
+axiom mem_proj_op_1160 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. forall z:'a.
+  (mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, prj1({ Tuple2_proj_1 = s; Tuple2_proj_2 = t })) ->
+  (z = x)))
+
+axiom mem_proj_op_1161 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. forall z:'a.
+  ((mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, times(times(s, t), s)) and (z = x)) -> mem({
+  Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y }; Tuple2_proj_2 = z
+  }, prj1({ Tuple2_proj_1 = s; Tuple2_proj_2 = t }))))
+
+logic prj2 : ('a set, 'b set) tuple2 -> (('a, 'b) tuple2, 'b) tuple2 set
+
+axiom mem_proj_op_2159 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. forall z:'b.
+  (mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, prj2({ Tuple2_proj_1 = s; Tuple2_proj_2 = t })) ->
+  mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, times(times(s, t), t))))
+
+axiom mem_proj_op_2160 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. forall z:'b.
+  (mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, prj2({ Tuple2_proj_1 = s; Tuple2_proj_2 = t })) ->
+  (z = y)))
+
+axiom mem_proj_op_2161 :
+  (forall s:'a set. forall t:'b set. forall x:'a. forall y:'b. forall z:'b.
+  ((mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = z }, times(times(s, t), t)) and (z = y)) -> mem({
+  Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y }; Tuple2_proj_2 = z
+  }, prj2({ Tuple2_proj_1 = s; Tuple2_proj_2 = t }))))
+
+logic parallel_product : ('a, 'b) tuple2 set, ('c, 'd) tuple2 set -> (('a,
+  'c) tuple2, ('b, 'd) tuple2) tuple2 set
+
+axiom mem_parallel_product159 :
+  (forall h:('a, 'b) tuple2 set. forall k:('c, 'd) tuple2 set. forall x:'a.
+  forall y:'c. forall z:'b. forall w:'d. (mem({ Tuple2_proj_1 = {
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }; Tuple2_proj_2 = { Tuple2_proj_1 =
+  z; Tuple2_proj_2 = w } }, parallel_product(h, k)) -> mem({ Tuple2_proj_1 =
+  x; Tuple2_proj_2 = z }, h)))
+
+axiom mem_parallel_product160 :
+  (forall h:('a, 'b) tuple2 set. forall k:('c, 'd) tuple2 set. forall x:'a.
+  forall y:'c. forall z:'b. forall w:'d. (mem({ Tuple2_proj_1 = {
+  Tuple2_proj_1 = x; Tuple2_proj_2 = y }; Tuple2_proj_2 = { Tuple2_proj_1 =
+  z; Tuple2_proj_2 = w } }, parallel_product(h, k)) -> mem({ Tuple2_proj_1 =
+  y; Tuple2_proj_2 = w }, k)))
+
+axiom mem_parallel_product161 :
+  (forall h:('a, 'b) tuple2 set. forall k:('c, 'd) tuple2 set. forall x:'a.
+  forall y:'c. forall z:'b. forall w:'d. ((mem({ Tuple2_proj_1 = x;
+  Tuple2_proj_2 = z }, h) and mem({ Tuple2_proj_1 = y; Tuple2_proj_2 = w },
+  k)) -> mem({ Tuple2_proj_1 = { Tuple2_proj_1 = x; Tuple2_proj_2 = y };
+  Tuple2_proj_2 = { Tuple2_proj_1 = z; Tuple2_proj_2 = w } },
+  parallel_product(h, k))))
+
+logic infix_plmngt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_partial_function_set159 :
+  (forall s:'a set. forall t:'b set. forall f:('a, 'b) tuple2 set. (mem(f,
+  infix_plmngt(s, t)) -> mem(f, relation(s, t))))
+
+axiom mem_partial_function_set160 :
+  (forall s:'a set. forall t:'b set. forall f:('a, 'b) tuple2 set. (mem(f,
+  infix_plmngt(s, t)) ->
+  (forall x:'a. forall y1:'b. forall y2:'b. ((mem({ Tuple2_proj_1 = x;
+  Tuple2_proj_2 = y1 }, f) and mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y2 },
+  f)) -> (y1 = y2)))))
+
+axiom mem_partial_function_set161 :
+  (forall s:'a set. forall t:'b set. forall f:('a, 'b) tuple2 set. ((mem(f,
+  relation(s, t)) and
+  (forall x:'a. forall y1:'b. forall y2:'b. ((mem({ Tuple2_proj_1 = x;
+  Tuple2_proj_2 = y1 }, f) and mem({ Tuple2_proj_1 = x; Tuple2_proj_2 = y2 },
+  f)) -> (y1 = y2)))) -> mem(f, infix_plmngt(s, t))))
+
+logic infix_mnmngt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_total_function_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_mnmngt(s, t)) -> mem(x, infix_plmngt(s, t))))
+
+axiom mem_total_function_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_mnmngt(s, t)) -> infix_eqeq(dom(x), s)))
+
+axiom mem_total_function_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_plmngt(s, t)) and infix_eqeq(dom(x), s)) -> mem(x, infix_mnmngt(s,
+  t))))
+
+logic infix_gtplgt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_partial_injection_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtplgt(s, t)) -> mem(x, infix_plmngt(s, t))))
+
+axiom mem_partial_injection_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtplgt(s, t)) -> mem(inverse(x), infix_plmngt(t, s))))
+
+axiom mem_partial_injection_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_plmngt(s, t)) and mem(inverse(x), infix_plmngt(t, s))) -> mem(x,
+  infix_gtplgt(s, t))))
+
+logic infix_gtmngt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_total_injection_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtmngt(s, t)) -> mem(x, infix_gtplgt(s, t))))
+
+axiom mem_total_injection_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtmngt(s, t)) -> mem(x, infix_mnmngt(s, t))))
+
+axiom mem_total_injection_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_gtplgt(s, t)) and mem(x, infix_mnmngt(s, t))) -> mem(x,
+  infix_gtmngt(s, t))))
+
+logic infix_plmngtgt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_partial_surjection_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_plmngtgt(s, t)) -> mem(x, infix_plmngt(s, t))))
+
+axiom mem_partial_surjection_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_plmngtgt(s, t)) -> infix_eqeq(ran(x), t)))
+
+axiom mem_partial_surjection_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_plmngt(s, t)) and infix_eqeq(ran(x), t)) -> mem(x, infix_plmngtgt(s,
+  t))))
+
+logic infix_mnmngtgt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_total_surjection_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_mnmngtgt(s, t)) -> mem(x, infix_plmngtgt(s, t))))
+
+axiom mem_total_surjection_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_mnmngtgt(s, t)) -> mem(x, infix_mnmngt(s, t))))
+
+axiom mem_total_surjection_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_plmngtgt(s, t)) and mem(x, infix_mnmngt(s, t))) -> mem(x,
+  infix_mnmngtgt(s, t))))
+
+logic infix_gtplgtgt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_partial_bijection_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtplgtgt(s, t)) -> mem(x, infix_gtplgt(s, t))))
+
+axiom mem_partial_bijection_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtplgtgt(s, t)) -> mem(x, infix_plmngtgt(s, t))))
+
+axiom mem_partial_bijection_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_gtplgt(s, t)) and mem(x, infix_plmngtgt(s, t))) -> mem(x,
+  infix_gtplgtgt(s, t))))
+
+logic infix_gtmngtgt : 'a set, 'b set -> ('a, 'b) tuple2 set set
+
+axiom mem_total_bijection_set159 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtmngtgt(s, t)) -> mem(x, infix_gtmngt(s, t))))
+
+axiom mem_total_bijection_set160 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. (mem(x,
+  infix_gtmngtgt(s, t)) -> mem(x, infix_mnmngtgt(s, t))))
+
+axiom mem_total_bijection_set161 :
+  (forall s:'a set. forall t:'b set. forall x:('a, 'b) tuple2 set. ((mem(x,
+  infix_gtmngt(s, t)) and mem(x, infix_mnmngtgt(s, t))) -> mem(x,
+  infix_gtmngtgt(s, t))))
+
+logic apply : ('a, 'b) tuple2 set, 'a -> 'b
+
+axiom apply_def0 :
+  (forall f:('a, 'b) tuple2 set. forall s:'a set. forall t:'b set.
+  forall a1:'a. ((mem(f, infix_plmngt(s, t)) and mem(a1, dom(f))) -> mem({
+  Tuple2_proj_1 = a1; Tuple2_proj_2 = apply(f, a1) }, f)))
+
+goal mem_dom_1 :
+  (forall s:'a set. forall t:'b set. forall r:('a, 'b) tuple2 set. (mem(r,
+  relation(s, t)) -> subset(dom(r), s)))
