@@ -1,10 +1,10 @@
 # $Id$
 
+include ../config
+
 SHELL:=/bin/bash
 ZIPPER=zipperposition
 ARCHSAT=archsat
-TIMEOUT=3
-MEMLIMIT=2000
 BFILES=$(shell find \( -name '*.zf' \) -and \( -not -name bset.zf \))
 BRESFILES=$(BFILES:%.zf=%.res)
 
@@ -25,25 +25,33 @@ analyze:
 	grep -l 'Error' *.res.zipper | sort -V > zipper.error
 
 summary: analyze
-	-@wc -l zipper.*; wc -l archsat.*
+	-@wc -l zipper.*; echo -n "Total time (valid): "; \
+        grep "Valid time" *.res.zipper | cut -d: -f3 | paste -s -d + - | bc; \
+        wc -l archsat.*; echo -n "Total time (valid): "; \
+        grep "Valid time" *.res.archsat | cut -d: -f3 | paste -s -d + - | bc
 
 frogtest:
 	frogtest run -c conf.toml
 
 clean:
-	rm -f *~ *.res* zipper.* archsat.*
+	rm -f *~ *.res* *.time zipper.* archsat.*
 
 .SUFFIXES: .zf .res
 
 %.res: %.zf bset.zf
 	-@echo -n "[Zipper] **** Testing file $<: "; touch $@; \
-        $(ZIPPER) --timeout $(TIMEOUT) --mem-limit $(MEMLIMIT) $< > $@.zipper; \
+        { /usr/bin/time -f "%U + %S" bash -c \
+        "$(ZIPPER) --timeout $(TIMEOUT) --mem-limit $(MEMLIMIT) $< \
+        > $@.zipper"; } 2> $@.time; \
         tmp=`cat $@.zipper | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
-        else echo -e "\033[31mFail\033[39m"; fi ; \
+        echo "Valid time: `cat $@.time | bc`" >> $@.zipper; \
+        else echo -e "\033[31mFail\033[39m"; fi; rm $@.time; \
         echo -n "[ArchSat] **** Testing file $<: "; \
-        $(ARCHSAT) -x +rwrt,+meta --meta.find=simple -t $(TIMEOUT)s \
-        -s $(MEMLIMIT)M -o SZS $< &> $@.archsat; \
+        { /usr/bin/time -f "%U + %S" bash -c \
+        "$(ARCHSAT) -x +rwrt,+meta --meta.find=simple -t $(TIMEOUT)s \
+        -s $(MEMLIMIT)M -o SZS $< &> $@.archsat"; } 2> $@.time; \
         tmp=`cat $@.archsat | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
-        else echo -e "\033[31mFail\033[39m"; fi
+        echo "Valid time: `cat $@.time | bc`" >> $@.archsat; \
+        else echo -e "\033[31mFail\033[39m"; fi; rm $@.time
