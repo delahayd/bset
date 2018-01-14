@@ -1,8 +1,9 @@
 # $Id$
 
+include ../config
+
 SHELL:=/bin/bash
 ALTERGO=alt-ergo
-TIMEOUT=3
 BFILES=$(shell ls *.why)
 BRESFILES=$(BFILES:%.why=%.res)
 
@@ -14,16 +15,20 @@ analyze:
         grep -l "Timeout" *.res.alt-ergo | sort -V > alt-ergo.limit
 
 summary: analyze
-	-@wc -l alt-ergo.*
+	-@wc -l alt-ergo.*; echo -n "Total time (valid): "; \
+        grep "Valid time" *.res.alt-ergo | cut -d: -f3 | paste -s -d + - | bc
 
 clean:
-	rm -f *~ *.res*
+	rm -f *~ *.res* *.time alt-ergo.*
 
 .SUFFIXES: .why .res
 
 %.res: %.why
 	-@echo -n "[Alt-Ergo] **** Testing file $<: "; touch $@; \
-        $(ALTERGO) -timelimit $(TIMEOUT) $< > $@.alt-ergo; \
+        { /usr/bin/time -f "%U + %S" bash -c \
+        "ulimit -v `expr $(MEMLIMIT) \* 1000`; \
+        $(ALTERGO) -timelimit $(TIMEOUT) $< > $@.alt-ergo"; } 2> $@.time; \
         tmp=`cat $@.alt-ergo | grep "Valid"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
-        else echo -e "\033[31mFail\033[39m"; fi 
+        echo "Valid time: `cat $@.time | bc`" >> $@.alt-ergo; \
+        else echo -e "\033[31mFail\033[39m"; fi; rm $@.time
