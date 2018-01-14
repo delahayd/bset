@@ -6,7 +6,7 @@ val [infix "∈"] mem : pi (a : type). a -> set a -> prop.
 val [infix ","] pair : pi (a b : type). a -> b -> (tup a b).
 val [prefix "ℙ"] power : pi (a : type). set a -> set (set a).
 val [infix "⊆"] subset : pi (a : type). set a -> set a -> prop.
-val [infer "★"] times : pi (a b : type). set a -> set b -> set (tup a b).
+val [infix "★"] times : pi (a b : type). set a -> set b -> set (tup a b).
 val [infix "∪"] union : pi (a : type). set a -> set a -> set a.
 val [infix "∩"] inter : pi (a : type). set a -> set a -> set a.
 val [infix "-"] diff : pi (a : type). set a -> set a -> set a.
