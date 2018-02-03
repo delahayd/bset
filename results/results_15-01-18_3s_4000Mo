@@ -1,0 +1,40 @@
+==== alt-ergo ====
+  17 alt-ergo.limit
+  70 alt-ergo.unknown
+ 232 alt-ergo.valid
+ 319 total
+Total time (valid): 8.45
+==== cvc4 ====
+ 232 cvc4.unknown
+  87 cvc4.valid
+ 319 total
+Total time (valid): 33.94
+==== fof ====
+ 273 princess.limit
+  46 princess.valid
+ 319 total
+Total time (valid): 307.96
+ 299 e.limit
+  20 e.valid
+ 319 total
+Total time (valid): 5.64
+==== tff ====
+ 181 zen-mod.fail
+ 138 zen-mod.valid
+ 319 total
+Total time (valid): 3.14
+==== zf ====
+   0 zipper.error
+   0 zipper.fail
+   6 zipper.limit
+  10 zipper.unkown
+ 303 zipper.valid
+ 319 total
+Total time (valid): 14.40
+   0 archsat.error
+   0 archsat.fail
+  58 archsat.limit
+   1 archsat.unkown
+ 260 archsat.valid
+ 319 total
+Total time (valid): 16.98

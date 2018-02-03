@@ -60,7 +60,7 @@ clean:
         else echo -e "\033[31mFail\033[39m"; fi; rm $@.time; \
         echo -n "[ArchSat (Rewrite)] **** Testing file $<: "; \
         { /usr/bin/time -f "%U + %S" bash -c \
-        "$(ARCHSAT) -x +rwrt,+meta --meta.find=super -t $(TIMEOUT)s \
+        "$(ARCHSAT) -x +rwrt,+meta -t $(TIMEOUT)s \
         -s $(MEMLIMIT)M -o SZS $< &> $@.archsat"; } 2> $@.time; \
         tmp=`cat $@.archsat | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \
@@ -68,7 +68,7 @@ clean:
         else echo -e "\033[31mFail\033[39m"; fi; rm $@.time; \
         echo -n "[ArchSat (No Rewrite)] **** Testing file $<: "; \
         { /usr/bin/time -f "%U + %S" bash -c \
-        "$(ARCHSAT) -x +meta --meta.find=super -t $(TIMEOUT)s \
+        "$(ARCHSAT) -x +meta -t $(TIMEOUT)s \
         -s $(MEMLIMIT)M -o SZS $< &> $@.archsat-norew"; } 2> $@.time; \
         tmp=`cat $@.archsat-norew | grep "SZS status Theorem"`; \
         if test -n "$$tmp"; then echo -e "\033[32mValid\033[39m"; \

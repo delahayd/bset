@@ -1,0 +1,9 @@
+==== zf ====
+[zipperposition 1.5]
+   0 zipper.error
+   0 zipper.fail
+   6 zipper.limit
+  10 zipper.unkown
+ 303 zipper.valid
+ 319 total
+Total time (valid): 17.61

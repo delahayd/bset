@@ -1,0 +1,26 @@
+==== alt-ergo ====
+   8 alt-ergo.limit
+  79 alt-ergo.unknown
+ 232 alt-ergo.valid
+ 319 total
+Total time (valid): 8.09
+==== tff ====
+ 181 zen-mod.fail
+ 138 zen-mod.valid
+ 319 total
+Total time (valid): 2.74
+==== zf ====
+   0 zipper.error
+   0 zipper.fail
+   5 zipper.limit
+  10 zipper.unkown
+ 304 zipper.valid
+ 319 total
+Total time (valid): 29.32
+   0 archsat.error
+   0 archsat.fail
+  49 archsat.limit
+   1 archsat.unkown
+ 269 archsat.valid
+ 319 total
+Total time (valid): 140.26
