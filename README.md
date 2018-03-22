@@ -49,8 +49,12 @@ To run the tests, you must:
 to the tools that you want to run (by default, only Zipperposition, ArchSat,
 Zenon Modulo, and Alt-Ergo are run)
 3. Run *make* to start the tests
-4. Once finished, run *make summary* to display the results; a file is also created in directory *results* with the date and the configuration of the test
+4. Once finished, run *make summary* to display the results; a file is also
+created in directory *results* with the date and the configuration of the test
 (timeout and memory limit)
+
+Note: you must have the GNU *time* command available (and installed in the
+directory */usr/bin*).
 
 ## Running Another Tool
 
